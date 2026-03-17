@@ -329,15 +329,10 @@ function App() {
   const [editNotes, setEditNotes] = useState("");
 
   const svgRef = useRef(null);
-  const canvasRef = useRef(null);
+  const canvasRef = useCallback(node => { if (node) drawField(node); }, []);
 
   // Persist
   useEffect(() => { savePlays(plays); }, [plays]);
-
-  // Draw field
-  useEffect(() => {
-    if (canvasRef.current) drawField(canvasRef.current);
-  }, []);
 
   // Current play
   const curPlay = selKey ? plays[selKey] : null;
