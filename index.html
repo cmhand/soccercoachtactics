@@ -1,848 +1,2037 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playbook — Soccer Tactics Coach</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #0c110e;
-    --surface: #131a15;
-    --surface2: #1a231c;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #d4cfc6;
-    --text2: rgba(255,255,255,0.4);
-    --text3: rgba(255,255,255,0.2);
-    --green: #2d8a4e;
-    --green2: rgba(45,138,78,0.15);
-    --green3: rgba(45,138,78,0.35);
-    --red: #c0392b;
-    --red2: rgba(192,57,43,0.12);
-    --red3: rgba(192,57,43,0.35);
-    --blue: #1D3557;
-    --attacker: #E63946;
-    --font: 'Bricolage Grotesque', sans-serif;
-    --serif: 'Newsreader', serif;
-    --field-green: #2d8a4e;
-    --field-line: rgba(255,255,255,0.42);
-  }
-  html, body { height: 100%; }
-  body { font-family: var(--font); background: var(--bg); color: var(--text); display: flex; flex-direction: column; overflow: hidden; }
-  button { font-family: var(--font); cursor: pointer; border: none; background: none; color: var(--text); }
-  input, textarea { font-family: var(--font); background: rgba(255,255,255,0.04); border: 1px solid var(--border2); color: #fff; border-radius: 6px; padding: 7px 10px; font-size: 13px; outline: none; }
-  input:focus, textarea:focus { border-color: var(--green3); }
-  textarea { resize: vertical; min-height: 60px; }
-  ::selection { background: var(--green); color: #fff; }
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
-
-  /* Layout */
-  .header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(45,138,78,0.06) 0%, transparent 100%); flex-shrink: 0; }
-  .header h1 { font-family: var(--serif); font-size: 24px; font-weight: 600; color: #fff; letter-spacing: -0.02em; }
-  .header-sub { font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-left: 10px; }
-  .layout { display: flex; flex: 1; overflow: hidden; }
-  .sidebar { width: 230px; border-right: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; background: var(--surface); padding: 12px 0; }
-  .main { flex: 1; overflow-y: auto; padding: 16px 24px 40px; }
-
-  /* Sidebar */
-  .sb-section { padding: 0 12px; margin-bottom: 16px; }
-  .sb-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text3); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .sb-label .count { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 8px; font-size: 9px; }
-  .sb-play { display: flex; align-items: center; width: 100%; padding: 7px 10px; margin-bottom: 2px; border-radius: 6px; border: 1px solid transparent; font-size: 12.5px; text-align: left; transition: all 0.12s; color: var(--text2); font-weight: 400; }
-  .sb-play:hover { background: rgba(255,255,255,0.03); color: var(--text); }
-  .sb-play.active { border-color: var(--green3); background: var(--green2); color: #fff; font-weight: 600; }
-  .sb-play .age-badge { font-size: 9px; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; color: var(--text3); margin-left: auto; flex-shrink: 0; font-weight: 600; }
-  .sb-empty { font-size: 12px; color: var(--text3); padding: 8px 0; font-style: italic; }
-
-  /* Buttons */
-  .btn { padding: 8px 18px; border-radius: 7px; font-size: 13px; font-weight: 600; transition: all 0.12s; }
-  .btn-green { background: var(--green); color: #fff; }
-  .btn-green:hover { background: #34a05a; }
-  .btn-outline { border: 1px solid var(--border2); color: var(--text2); font-weight: 500; }
-  .btn-outline:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-  .btn-red { border: 1px solid var(--red3); background: var(--red2); color: var(--red); }
-  .btn-rec { border: 1px solid var(--red3); background: var(--red2); color: var(--red); display: flex; align-items: center; gap: 7px; }
-  .btn-rec .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
-  .btn-sm { padding: 5px 12px; font-size: 11.5px; border-radius: 5px; }
-  .btn-icon { padding: 5px 8px; border-radius: 5px; font-size: 12px; }
-  .btn-capture { width: 100%; padding: 10px; border: 2px dashed var(--green3); background: rgba(45,138,78,0.05); color: var(--green); font-size: 13px; font-weight: 600; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-
-  /* Field */
-  .field-wrap { position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 28px rgba(0,0,0,0.4); display: inline-block; }
-  .field-canvas { position: absolute; top: 0; left: 0; }
-  .field-svg { position: absolute; top: 0; left: 0; touch-action: none; }
-
-  /* Status bar */
-  .status { padding: 9px 13px; margin-bottom: 12px; border-radius: 7px; font-size: 13px; line-height: 1.5; display: flex; align-items: center; gap: 8px; }
-  .status-view { background: rgba(255,255,255,0.025); border: 1px solid var(--border); color: var(--text2); }
-  .status-rec { background: var(--red2); border: 1px solid rgba(192,57,43,0.18); color: #e8a49c; }
-  .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse 1.5s ease infinite; flex-shrink: 0; }
-
-  /* Controls bar */
-  .controls { display: flex; align-items: center; gap: 7px; margin-top: 12px; flex-wrap: wrap; }
-  .progress-bar { display: flex; gap: 3px; margin-top: 8px; }
-  .progress-seg { flex: 1; height: 3.5px; border-radius: 2px; cursor: pointer; transition: background 0.2s; }
-  .step-legend { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
-  .step-chip { font-size: 11px; padding: 3px 7px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
-
-  /* Play detail */
-  .play-meta { margin-bottom: 16px; }
-  .play-title { font-family: var(--serif); font-size: 22px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-  .play-age { font-size: 11px; color: var(--green); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-  .play-desc { font-size: 13.5px; color: var(--text2); line-height: 1.55; margin-top: 8px; }
-  .play-notes { margin-top: 14px; padding: 12px 14px; border-radius: 8px; background: rgba(255,255,255,0.025); border: 1px solid var(--border); }
-  .play-notes-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); font-weight: 700; margin-bottom: 6px; }
-  .play-notes-text { font-family: var(--serif); font-size: 14px; color: var(--text); line-height: 1.65; font-style: italic; white-space: pre-wrap; }
-
-  /* Empty state */
-  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px; }
-  .empty-state h2 { font-family: var(--serif); font-size: 22px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
-  .empty-state p { font-size: 13.5px; color: var(--text3); max-width: 300px; line-height: 1.5; margin-bottom: 20px; }
-
-  /* Roster in sidebar */
-  .roster-item { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; padding: 3px 6px; border-radius: 4px; font-size: 11.5px; }
-  .roster-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-  .roster-rm { background: none; border: none; color: var(--text3); font-size: 13px; padding: 0 3px; cursor: pointer; }
-  .roster-rm:hover { color: var(--red); }
-
-  /* Modal */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; }
-  .modal { background: var(--surface2); border-radius: 12px; padding: 24px; border: 1px solid var(--border2); width: 380px; max-width: 90vw; }
-  .modal h3 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 14px; }
-  .modal label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; font-weight: 500; }
-  .modal .field-group { margin-bottom: 12px; }
-  .modal .field-group input, .modal .field-group textarea, .modal .field-group select { width: 100%; }
-  .modal select { font-family: var(--font); background: rgba(255,255,255,0.04); border: 1px solid var(--border2); color: #fff; border-radius: 6px; padding: 7px 10px; font-size: 13px; outline: none; }
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
-
-  /* Confirm dialog */
-  .confirm-text { font-size: 14px; color: var(--text); line-height: 1.5; margin-bottom: 4px; }
-  .confirm-sub { font-size: 12px; color: var(--text3); }
-
-  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }
-  @media (max-width: 800px) {
-    .sidebar { width: 180px; }
-    .main { padding: 12px 14px 30px; }
-  }
-</style>
-</head>
-<body>
-
-<div id="app"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-
-<script type="text/babel">
-const { useState, useRef, useEffect, useCallback } = React;
-
-const FIELD_W = 640;
-const FIELD_H = 460;
-const PLAYER_R = 16;
-const BALL_R = 7;
-
-const AGE_GROUPS = [
-  { value: "u6", label: "U6" },
-  { value: "u8", label: "U8" },
-  { value: "u10", label: "U10" },
-  { value: "u12", label: "U12" },
-  { value: "u14", label: "U14" },
-  { value: "u16", label: "U16" },
-  { value: "u18", label: "U18" },
-  { value: "adult", label: "Adult" },
-];
-
-const AGE_ORDER = AGE_GROUPS.map(a => a.value);
-
-// ─── Default Plays ───
-// Paste baked-in plays here. Each key should be a stable slug (e.g. "wall-pass").
-const DEFAULT_PLAYS = {
-};
-
-// ─── Storage ───
-function loadPlays() {
-  try {
-    const saved = JSON.parse(localStorage.getItem("playbook_plays") || "{}");
-    // Seed any default plays not already in localStorage
-    const merged = { ...saved };
-    for (const [k, v] of Object.entries(DEFAULT_PLAYS)) {
-      if (!merged[k]) merged[k] = v;
-    }
-    return merged;
-  } catch { return { ...DEFAULT_PLAYS }; }
-}
-function savePlays(plays) {
-  localStorage.setItem("playbook_plays", JSON.stringify(plays));
-}
-
-// ─── Field Drawing ───
-function drawField(canvas) {
-  const ctx = canvas.getContext("2d");
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = FIELD_W * dpr;
-  canvas.height = FIELD_H * dpr;
-  ctx.scale(dpr, dpr);
-
-  const W = FIELD_W, H = FIELD_H;
-  
-  // Grass
-  ctx.fillStyle = "#2d8a4e";
-  ctx.fillRect(0, 0, W, H);
-  for (let i = 0; i < W; i += 80) {
-    ctx.fillStyle = "rgba(255,255,255,0.025)";
-    ctx.fillRect(i, 0, 40, H);
-  }
-
-  ctx.strokeStyle = "rgba(255,255,255,0.42)";
-  ctx.lineWidth = 1.5;
-
-  const m = 24; // margin / touchline inset
-  const fieldW = W - 2 * m;
-  const fieldH = H - 2 * m;
-
-  // Outer boundary
-  ctx.strokeRect(m, m, fieldW, fieldH);
-
-  // Center line
-  ctx.beginPath();
-  ctx.moveTo(W / 2, m);
-  ctx.lineTo(W / 2, H - m);
-  ctx.stroke();
-
-  // Center circle — 10 yard radius scaled. Field is ~120 yards long, so scale = fieldW/120
-  const yardScale = fieldW / 120;
-  const centerCircleR = 10 * yardScale;
-  ctx.beginPath();
-  ctx.arc(W / 2, H / 2, centerCircleR, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Center spot
-  ctx.fillStyle = "rgba(255,255,255,0.42)";
-  ctx.beginPath();
-  ctx.arc(W / 2, H / 2, 3, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Penalty areas — 18 yards deep, 44 yards wide
-  const paDepth = 18 * yardScale;
-  const paWidth = 44 * yardScale;
-  const paTop = H / 2 - paWidth / 2;
-  // Left
-  ctx.strokeRect(m, paTop, paDepth, paWidth);
-  // Right
-  ctx.strokeRect(W - m - paDepth, paTop, paDepth, paWidth);
-
-  // Goal areas — 6 yards deep, 20 yards wide
-  const gaDepth = 6 * yardScale;
-  const gaWidth = 20 * yardScale;
-  const gaTop = H / 2 - gaWidth / 2;
-  ctx.strokeRect(m, gaTop, gaDepth, gaWidth);
-  ctx.strokeRect(W - m - gaDepth, gaTop, gaDepth, gaWidth);
-
-  // Penalty spots — 12 yards from goal line
-  const penSpot = 12 * yardScale;
-  ctx.fillStyle = "rgba(255,255,255,0.42)";
-  ctx.beginPath(); ctx.arc(m + penSpot, H / 2, 2.5, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(W - m - penSpot, H / 2, 2.5, 0, Math.PI * 2); ctx.fill();
-
-  // Penalty arcs
-  const arcR = 10 * yardScale;
-  ctx.beginPath();
-  ctx.arc(m + penSpot, H / 2, arcR, -0.7, 0.7);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(W - m - penSpot, H / 2, arcR, Math.PI - 0.7, Math.PI + 0.7);
-  ctx.stroke();
-
-  // Corner arcs
-  const cornerR = yardScale;
-  [[m, m], [W-m, m], [m, H-m], [W-m, H-m]].forEach(([cx, cy]) => {
-    const startAngles = {
-      [`${m},${m}`]: [0, Math.PI/2],
-      [`${W-m},${m}`]: [Math.PI/2, Math.PI],
-      [`${m},${H-m}`]: [-Math.PI/2, 0],
-      [`${W-m},${H-m}`]: [Math.PI, 3*Math.PI/2],
-    };
-    const key = `${cx},${cy}`;
-    const [a1, a2] = startAngles[key] || [0, Math.PI/2];
-    ctx.beginPath();
-    ctx.arc(cx, cy, cornerR * 3, a1, a2);
-    ctx.stroke();
-  });
-
-  // Goals (behind the line)
-  ctx.strokeStyle = "rgba(255,255,255,0.25)";
-  ctx.lineWidth = 2.5;
-  const goalW = 8 * yardScale;
-  const goalTop = H / 2 - goalW / 2;
-  // Left goal
-  ctx.beginPath();
-  ctx.moveTo(m, goalTop); ctx.lineTo(m - 6, goalTop); ctx.lineTo(m - 6, goalTop + goalW); ctx.lineTo(m, goalTop + goalW);
-  ctx.stroke();
-  // Right goal
-  ctx.beginPath();
-  ctx.moveTo(W-m, goalTop); ctx.lineTo(W-m+6, goalTop); ctx.lineTo(W-m+6, goalTop + goalW); ctx.lineTo(W-m, goalTop + goalW);
-  ctx.stroke();
-}
-
-function lerp(a, b, t) { return a + (b - a) * t; }
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-
-// ─── App ───
-function App() {
-  const [plays, setPlays] = useState(loadPlays);
-  const [mode, setMode] = useState("view"); // view | record | edit_meta
-  const [selKey, setSelKey] = useState(null);
-
-  // Playback
-  const [playing, setPlaying] = useState(false);
-  const [fi, setFi] = useState(0);
-  const [prog, setProg] = useState(0);
-  const [speed, setSpeed] = useState(1);
-  const animRef = useRef(null);
-  const t0Ref = useRef(0);
-
-  // Recording
-  const [recPlayers, setRecPlayers] = useState([]);
-  const [recDefs, setRecDefs] = useState([]);
-  const [recBall, setRecBall] = useState({ x: 300, y: 340 });
-  const [recFrames, setRecFrames] = useState([]);
-  const [dragging, setDragging] = useState(null);
-
-  // Modals
-  const [showNoteModal, setShowNoteModal] = useState(false);
-  const [noteInput, setNoteInput] = useState("");
-  const [showSaveModal, setShowSaveModal] = useState(false);
-  const [saveName, setSaveName] = useState("");
-  const [saveDesc, setSaveDesc] = useState("");
-  const [saveAge, setSaveAge] = useState("u10");
-  const [saveNotes, setSaveNotes] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
-  const [showEditMeta, setShowEditMeta] = useState(false);
-  const [editName, setEditName] = useState("");
-  const [editDesc, setEditDesc] = useState("");
-  const [editAge, setEditAge] = useState("");
-  const [editNotes, setEditNotes] = useState("");
-
-  const svgRef = useRef(null);
-  const canvasRef = useCallback(node => { if (node) drawField(node); }, []);
-
-  // Persist
-  useEffect(() => { savePlays(plays); }, [plays]);
-
-  // Current play
-  const curPlay = selKey ? plays[selKey] : null;
-  const curFrames = curPlay?.frames || [];
-  const totalF = curFrames.length;
-
-  // Organize by age group
-  const playsByAge = {};
-  Object.entries(plays).forEach(([k, p]) => {
-    const age = p.age || "u10";
-    if (!playsByAge[age]) playsByAge[age] = [];
-    playsByAge[age].push({ key: k, ...p });
-  });
-  const sortedAges = AGE_ORDER.filter(a => playsByAge[a]);
-
-  // Playback
-  useEffect(() => {
-    if (!playing || fi >= totalF - 1) { if (fi >= totalF - 1 && playing) setPlaying(false); return; }
-    t0Ref.current = performance.now();
-    const dur = 700 / speed;
-    const tick = (now) => {
-      const t = Math.min(1, (now - t0Ref.current) / dur);
-      setProg(t);
-      if (t >= 1) { setFi(i => i + 1); setProg(0); return; }
-      animRef.current = requestAnimationFrame(tick);
-    };
-    animRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animRef.current);
-  }, [playing, fi, totalF, speed]);
-
-  const snapshot = useCallback(() => {
-    if (totalF === 0) return null;
-    const i = clamp(fi, 0, totalF - 1);
-    const cur = curFrames[i], nxt = i < totalF - 1 ? curFrames[i + 1] : cur;
-    const t = prog;
-    const pos = {};
-    for (const id of Object.keys(cur.positions)) {
-      pos[id] = {
-        x: lerp(cur.positions[id].x, (nxt.positions[id] || cur.positions[id]).x, t),
-        y: lerp(cur.positions[id].y, (nxt.positions[id] || cur.positions[id]).y, t),
-      };
-    }
-    const ball = { x: lerp(cur.ball.x, nxt.ball.x, t), y: lerp(cur.ball.y, nxt.ball.y, t) };
-    return { pos, ball, note: cur.note };
-  }, [curFrames, totalF, fi, prog]);
-
-  const reset = () => { cancelAnimationFrame(animRef.current); setPlaying(false); setFi(0); setProg(0); };
-  const selectPlay = (k) => { reset(); setSelKey(k); setMode("view"); };
-
-  // Recording
-  const startRec = () => {
-    setMode("record");
-    setRecFrames([]);
-    setRecPlayers([
-      { id: "A", x: 220, y: 340, color: "#E63946", label: "A" },
-      { id: "B", x: 360, y: 260, color: "#E63946", label: "B" },
-    ]);
-    setRecDefs([{ id: "D1", x: 300, y: 280, color: "#1D3557", label: "D" }]);
-    setRecBall({ x: 220, y: 340 });
-  };
-
-  const addEntity = (isDef) => {
-    if (isDef) {
-      const n = recDefs.length + 1;
-      setRecDefs(d => [...d, { id: `D${n}`, x: 300+Math.random()*80, y: 180+Math.random()*80, color: "#1D3557", label: `D${n > 1 ? n : ""}` }]);
-    } else {
-      const id = String.fromCharCode(65 + recPlayers.length);
-      setRecPlayers(p => [...p, { id, x: 180+Math.random()*100, y: 200+Math.random()*100, color: "#E63946", label: id }]);
-    }
-  };
-
-  const removeEntity = (id, isDef) => {
-    if (isDef) setRecDefs(d => d.filter(x => x.id !== id));
-    else setRecPlayers(p => p.filter(x => x.id !== id));
-  };
-
-  const captureFrame = (note) => {
-    const positions = {};
-    [...recPlayers, ...recDefs].forEach(p => { positions[p.id] = { x: Math.round(p.x), y: Math.round(p.y) }; });
-    setRecFrames(f => [...f, { positions, ball: { x: Math.round(recBall.x), y: Math.round(recBall.y) }, note: note || `Step ${f.length + 1}` }]);
-  };
-
-  const deleteFrame = (idx) => setRecFrames(f => f.filter((_, i) => i !== idx));
-  const jumpToFrame = (idx) => {
-    const f = recFrames[idx]; if (!f) return;
-    setRecPlayers(ps => ps.map(p => f.positions[p.id] ? { ...p, x: f.positions[p.id].x, y: f.positions[p.id].y } : p));
-    setRecDefs(ds => ds.map(d => f.positions[d.id] ? { ...d, x: f.positions[d.id].x, y: f.positions[d.id].y } : d));
-    setRecBall({ ...f.ball });
-  };
-
-  const openSaveModal = () => {
-    if (recFrames.length < 2) return;
-    setSaveName(""); setSaveDesc(""); setSaveAge("u10"); setSaveNotes("");
-    setShowSaveModal(true);
-  };
-
-  const doSave = () => {
-    const name = saveName.trim() || `Play ${Object.keys(plays).length + 1}`;
-    const key = `p_${Date.now()}`;
-    const newPlay = {
-      name,
-      description: saveDesc.trim(),
-      age: saveAge,
-      notes: saveNotes.trim(),
-      players: recPlayers.map(p => ({ ...p })),
-      defenders: recDefs.map(d => ({ ...d })),
-      frames: [...recFrames],
-      created: Date.now(),
-    };
-    setPlays(pp => ({ ...pp, [key]: newPlay }));
-
-    // Output for baking into DEFAULT_PLAYS
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    console.log(`%c── New play ready to bake in ──`, "color:#2d8a4e;font-weight:bold");
-    console.log(`"${slug}":`, JSON.parse(JSON.stringify(newPlay)));
-    console.log(`%cPaste the above into DEFAULT_PLAYS in the HTML source.`, "color:#888;font-style:italic");
-
-    setShowSaveModal(false);
-    setMode("view");
-    setSelKey(key);
-    setFi(0); setProg(0);
-  };
-
-  const deletePlay = (key) => {
-    setPlays(pp => { const c = { ...pp }; delete c[key]; return c; });
-    if (selKey === key) setSelKey(null);
-    setShowDeleteConfirm(null);
-  };
-
-  const openEditMeta = () => {
-    if (!curPlay) return;
-    setEditName(curPlay.name);
-    setEditDesc(curPlay.description || "");
-    setEditAge(curPlay.age || "u10");
-    setEditNotes(curPlay.notes || "");
-    setShowEditMeta(true);
-  };
-
-  const doEditMeta = () => {
-    setPlays(pp => ({
-      ...pp,
-      [selKey]: { ...pp[selKey], name: editName.trim() || pp[selKey].name, description: editDesc.trim(), age: editAge, notes: editNotes.trim() }
-    }));
-    setShowEditMeta(false);
-  };
-
-  // Drag
-  const getSVGPt = (e) => {
-    const r = svgRef.current?.getBoundingClientRect(); if (!r) return { x: 0, y: 0 };
-    const cx = e.touches ? e.touches[0].clientX : e.clientX;
-    const cy = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: clamp((cx - r.left) / r.width * FIELD_W, 20, FIELD_W - 20), y: clamp((cy - r.top) / r.height * FIELD_H, 20, FIELD_H - 20) };
-  };
-
-  useEffect(() => {
-    if (!dragging) return;
-    const onMove = (e) => {
-      e.preventDefault();
-      const pt = getSVGPt(e);
-      if (dragging.type === "ball") setRecBall(pt);
-      else if (dragging.type === "player") setRecPlayers(ps => ps.map(p => p.id === dragging.id ? { ...p, ...pt } : p));
-      else setRecDefs(ds => ds.map(d => d.id === dragging.id ? { ...d, ...pt } : d));
-    };
-    const onUp = () => setDragging(null);
-    window.addEventListener("pointermove", onMove, { passive: false });
-    window.addEventListener("pointerup", onUp);
-    return () => { window.removeEventListener("pointermove", onMove); window.removeEventListener("pointerup", onUp); };
-  }, [dragging]);
-
-  // Render helpers
-  const snap = mode === "view" && curPlay ? snapshot() : null;
-  const fieldPlayers = mode === "view" ? (curPlay?.players || []) : recPlayers;
-  const fieldDefs = mode === "view" ? (curPlay?.defenders || []) : recDefs;
-  const ballPos = mode === "view" ? (snap?.ball || { x: -50, y: -50 }) : recBall;
-  const positions = snap?.pos || {};
-
-  const statusNote = mode === "record"
-    ? (recFrames.length === 0 ? "Drag players & ball into position, then capture your first frame." : `${recFrames.length} frame${recFrames.length !== 1 ? "s" : ""} captured — move pieces to next position and capture again.`)
-    : (snap?.note || curPlay?.description || "");
-
-  const noPlays = Object.keys(plays).length === 0;
-
-  return (
-    <>
-      {/* Header */}
-      <div className="header">
-        <div style={{ display: "flex", alignItems: "baseline" }}>
-          <h1>Playbook</h1>
-          <span className="header-sub">Soccer Tactics</span>
-        </div>
-        {mode === "view" ? (
-          <button className="btn btn-rec" onClick={startRec}>
-            <span className="dot" />Record New Play
-          </button>
-        ) : (
-          <div style={{ display: "flex", gap: 8 }}>
-            <button className="btn btn-outline" onClick={() => { setMode("view"); reset(); }}>Cancel</button>
-            <button className="btn btn-green" onClick={openSaveModal} style={{ opacity: recFrames.length < 2 ? 0.4 : 1, pointerEvents: recFrames.length < 2 ? "none" : "auto" }}>
-              Save Play ({recFrames.length} frames)
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="layout">
-        {/* Sidebar */}
-        <div className="sidebar">
-          {mode === "view" ? (
-            <>
-              {noPlays ? (
-                <div className="sb-section">
-                  <p className="sb-empty">No plays yet. Record your first play to get started.</p>
-                </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Playbook — Soccer Tactics Coach</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #0c110e;
+        --surface: #131a15;
+        --surface2: #1a231c;
+        --border: rgba(255, 255, 255, 0.07);
+        --border2: rgba(255, 255, 255, 0.12);
+        --text: #d4cfc6;
+        --text2: rgba(255, 255, 255, 0.4);
+        --text3: rgba(255, 255, 255, 0.2);
+        --green: #2d8a4e;
+        --green2: rgba(45, 138, 78, 0.15);
+        --green3: rgba(45, 138, 78, 0.35);
+        --red: #c0392b;
+        --red2: rgba(192, 57, 43, 0.12);
+        --red3: rgba(192, 57, 43, 0.35);
+        --blue: #1d3557;
+        --attacker: #e63946;
+        --font: "Bricolage Grotesque", sans-serif;
+        --serif: "Newsreader", serif;
+        --field-green: #2d8a4e;
+        --field-line: rgba(255, 255, 255, 0.42);
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      button {
+        font-family: var(--font);
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: var(--text);
+      }
+      input,
+      textarea {
+        font-family: var(--font);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border2);
+        color: #fff;
+        border-radius: 6px;
+        padding: 7px 10px;
+        font-size: 13px;
+        outline: none;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--green3);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 60px;
+      }
+      ::selection {
+        background: var(--green);
+        color: #fff;
+      }
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 3px;
+      }
+
+      /* Layout */
+      .header {
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(
+          180deg,
+          rgba(45, 138, 78, 0.06) 0%,
+          transparent 100%
+        );
+        flex-shrink: 0;
+      }
+      .header h1 {
+        font-family: var(--serif);
+        font-size: 24px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: -0.02em;
+      }
+      .header-sub {
+        font-size: 10px;
+        color: var(--text3);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-left: 10px;
+      }
+      .layout {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+      .sidebar {
+        width: 230px;
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        flex-shrink: 0;
+        background: var(--surface);
+        padding: 12px 0;
+      }
+      .main {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 24px 40px;
+      }
+
+      /* Sidebar */
+      .sb-section {
+        padding: 0 12px;
+        margin-bottom: 16px;
+      }
+      .sb-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text3);
+        font-weight: 700;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .sb-label .count {
+        background: rgba(255, 255, 255, 0.06);
+        padding: 1px 6px;
+        border-radius: 8px;
+        font-size: 9px;
+      }
+      .sb-play {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 7px 10px;
+        margin-bottom: 2px;
+        border-radius: 6px;
+        border: 1px solid transparent;
+        font-size: 12.5px;
+        text-align: left;
+        transition: all 0.12s;
+        color: var(--text2);
+        font-weight: 400;
+      }
+      .sb-play:hover {
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+      }
+      .sb-play.active {
+        border-color: var(--green3);
+        background: var(--green2);
+        color: #fff;
+        font-weight: 600;
+      }
+      .sb-play .age-badge {
+        font-size: 9px;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 1px 5px;
+        border-radius: 4px;
+        color: var(--text3);
+        margin-left: auto;
+        flex-shrink: 0;
+        font-weight: 600;
+      }
+      .sb-empty {
+        font-size: 12px;
+        color: var(--text3);
+        padding: 8px 0;
+        font-style: italic;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 8px 18px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.12s;
+      }
+      .btn-green {
+        background: var(--green);
+        color: #fff;
+      }
+      .btn-green:hover {
+        background: #34a05a;
+      }
+      .btn-outline {
+        border: 1px solid var(--border2);
+        color: var(--text2);
+        font-weight: 500;
+      }
+      .btn-outline:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--text);
+      }
+      .btn-red {
+        border: 1px solid var(--red3);
+        background: var(--red2);
+        color: var(--red);
+      }
+      .btn-rec {
+        border: 1px solid var(--red3);
+        background: var(--red2);
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .btn-rec .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+      .btn-sm {
+        padding: 5px 12px;
+        font-size: 11.5px;
+        border-radius: 5px;
+      }
+      .btn-icon {
+        padding: 5px 8px;
+        border-radius: 5px;
+        font-size: 12px;
+      }
+      .btn-capture {
+        width: 100%;
+        padding: 10px;
+        border: 2px dashed var(--green3);
+        background: rgba(45, 138, 78, 0.05);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      /* Field */
+      .field-wrap {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 6px 28px rgba(0, 0, 0, 0.4);
+        display: inline-block;
+      }
+      .field-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .field-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        touch-action: none;
+      }
+
+      /* Status bar */
+      .status {
+        padding: 9px 13px;
+        margin-bottom: 12px;
+        border-radius: 7px;
+        font-size: 13px;
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .status-view {
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid var(--border);
+        color: var(--text2);
+      }
+      .status-rec {
+        background: var(--red2);
+        border: 1px solid rgba(192, 57, 43, 0.18);
+        color: #e8a49c;
+      }
+      .pulse-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--red);
+        animation: pulse 1.5s ease infinite;
+        flex-shrink: 0;
+      }
+
+      /* Controls bar */
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .progress-bar {
+        display: flex;
+        gap: 3px;
+        margin-top: 8px;
+      }
+      .progress-seg {
+        flex: 1;
+        height: 3.5px;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .step-legend {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .step-chip {
+        font-size: 11px;
+        padding: 3px 7px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.15s;
+      }
+
+      /* Play detail */
+      .play-meta {
+        margin-bottom: 16px;
+      }
+      .play-title {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 4px;
+      }
+      .play-age {
+        font-size: 11px;
+        color: var(--green);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .play-desc {
+        font-size: 13.5px;
+        color: var(--text2);
+        line-height: 1.55;
+        margin-top: 8px;
+      }
+      .play-notes {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid var(--border);
+      }
+      .play-notes-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text3);
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .play-notes-text {
+        font-family: var(--serif);
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.65;
+        font-style: italic;
+        white-space: pre-wrap;
+      }
+
+      /* Empty state */
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        padding: 40px;
+      }
+      .empty-state h2 {
+        font-family: var(--serif);
+        font-size: 22px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 8px;
+      }
+      .empty-state p {
+        font-size: 13.5px;
+        color: var(--text3);
+        max-width: 300px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+
+      /* Roster in sidebar */
+      .roster-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 3px;
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-size: 11.5px;
+      }
+      .roster-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .roster-rm {
+        background: none;
+        border: none;
+        color: var(--text3);
+        font-size: 13px;
+        padding: 0 3px;
+        cursor: pointer;
+      }
+      .roster-rm:hover {
+        color: var(--red);
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+      }
+      .modal {
+        background: var(--surface2);
+        border-radius: 12px;
+        padding: 24px;
+        border: 1px solid var(--border2);
+        width: 380px;
+        max-width: 90vw;
+      }
+      .modal h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 14px;
+      }
+      .modal label {
+        display: block;
+        font-size: 12px;
+        color: var(--text2);
+        margin-bottom: 4px;
+        font-weight: 500;
+      }
+      .modal .field-group {
+        margin-bottom: 12px;
+      }
+      .modal .field-group input,
+      .modal .field-group textarea,
+      .modal .field-group select {
+        width: 100%;
+      }
+      .modal select {
+        font-family: var(--font);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border2);
+        color: #fff;
+        border-radius: 6px;
+        padding: 7px 10px;
+        font-size: 13px;
+        outline: none;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 18px;
+      }
+
+      /* Confirm dialog */
+      .confirm-text {
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.5;
+        margin-bottom: 4px;
+      }
+      .confirm-sub {
+        font-size: 12px;
+        color: var(--text3);
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      @media (max-width: 800px) {
+        .sidebar {
+          width: 180px;
+        }
+        .main {
+          padding: 12px 14px 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+    <script src="default-plays.js"></script>
+
+    <script type="text/babel">
+      const { useState, useRef, useEffect, useCallback } = React;
+
+      const FIELD_W = 640;
+      const FIELD_H = 460;
+      const PLAYER_R = 16;
+      const BALL_R = 7;
+
+      const AGE_GROUPS = [
+        { value: "u6", label: "U6" },
+        { value: "u8", label: "U8" },
+        { value: "u10", label: "U10" },
+        { value: "u12", label: "U12" },
+        { value: "u14", label: "U14" },
+        { value: "u16", label: "U16" },
+        { value: "u18", label: "U18" },
+        { value: "adult", label: "Adult" },
+      ];
+
+      const AGE_ORDER = AGE_GROUPS.map((a) => a.value);
+
+      // ─── Storage ───
+      function loadPlays() {
+        try {
+          const saved = JSON.parse(
+            localStorage.getItem("playbook_plays") || "{}",
+          );
+          // Seed any default plays not already in localStorage
+          const merged = { ...saved };
+          for (const [k, v] of Object.entries(DEFAULT_PLAYS)) {
+            if (!merged[k]) merged[k] = v;
+          }
+          return merged;
+        } catch {
+          return { ...DEFAULT_PLAYS };
+        }
+      }
+      function savePlays(plays) {
+        localStorage.setItem("playbook_plays", JSON.stringify(plays));
+      }
+
+      // ─── Field Drawing ───
+      function drawField(canvas) {
+        const ctx = canvas.getContext("2d");
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = FIELD_W * dpr;
+        canvas.height = FIELD_H * dpr;
+        ctx.scale(dpr, dpr);
+
+        const W = FIELD_W,
+          H = FIELD_H;
+
+        // Grass
+        ctx.fillStyle = "#2d8a4e";
+        ctx.fillRect(0, 0, W, H);
+        for (let i = 0; i < W; i += 80) {
+          ctx.fillStyle = "rgba(255,255,255,0.025)";
+          ctx.fillRect(i, 0, 40, H);
+        }
+
+        ctx.strokeStyle = "rgba(255,255,255,0.42)";
+        ctx.lineWidth = 1.5;
+
+        const m = 24; // margin / touchline inset
+        const fieldW = W - 2 * m;
+        const fieldH = H - 2 * m;
+
+        // Outer boundary
+        ctx.strokeRect(m, m, fieldW, fieldH);
+
+        // Center line
+        ctx.beginPath();
+        ctx.moveTo(W / 2, m);
+        ctx.lineTo(W / 2, H - m);
+        ctx.stroke();
+
+        // Center circle — 10 yard radius scaled. Field is ~120 yards long, so scale = fieldW/120
+        const yardScale = fieldW / 120;
+        const centerCircleR = 10 * yardScale;
+        ctx.beginPath();
+        ctx.arc(W / 2, H / 2, centerCircleR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Center spot
+        ctx.fillStyle = "rgba(255,255,255,0.42)";
+        ctx.beginPath();
+        ctx.arc(W / 2, H / 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Penalty areas — 18 yards deep, 44 yards wide
+        const paDepth = 18 * yardScale;
+        const paWidth = 44 * yardScale;
+        const paTop = H / 2 - paWidth / 2;
+        // Left
+        ctx.strokeRect(m, paTop, paDepth, paWidth);
+        // Right
+        ctx.strokeRect(W - m - paDepth, paTop, paDepth, paWidth);
+
+        // Goal areas — 6 yards deep, 20 yards wide
+        const gaDepth = 6 * yardScale;
+        const gaWidth = 20 * yardScale;
+        const gaTop = H / 2 - gaWidth / 2;
+        ctx.strokeRect(m, gaTop, gaDepth, gaWidth);
+        ctx.strokeRect(W - m - gaDepth, gaTop, gaDepth, gaWidth);
+
+        // Penalty spots — 12 yards from goal line
+        const penSpot = 12 * yardScale;
+        ctx.fillStyle = "rgba(255,255,255,0.42)";
+        ctx.beginPath();
+        ctx.arc(m + penSpot, H / 2, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(W - m - penSpot, H / 2, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Penalty arcs
+        const arcR = 10 * yardScale;
+        ctx.beginPath();
+        ctx.arc(m + penSpot, H / 2, arcR, -0.7, 0.7);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(W - m - penSpot, H / 2, arcR, Math.PI - 0.7, Math.PI + 0.7);
+        ctx.stroke();
+
+        // Corner arcs
+        const cornerR = yardScale;
+        [
+          [m, m],
+          [W - m, m],
+          [m, H - m],
+          [W - m, H - m],
+        ].forEach(([cx, cy]) => {
+          const startAngles = {
+            [`${m},${m}`]: [0, Math.PI / 2],
+            [`${W - m},${m}`]: [Math.PI / 2, Math.PI],
+            [`${m},${H - m}`]: [-Math.PI / 2, 0],
+            [`${W - m},${H - m}`]: [Math.PI, (3 * Math.PI) / 2],
+          };
+          const key = `${cx},${cy}`;
+          const [a1, a2] = startAngles[key] || [0, Math.PI / 2];
+          ctx.beginPath();
+          ctx.arc(cx, cy, cornerR * 3, a1, a2);
+          ctx.stroke();
+        });
+
+        // Goals (behind the line)
+        ctx.strokeStyle = "rgba(255,255,255,0.25)";
+        ctx.lineWidth = 2.5;
+        const goalW = 8 * yardScale;
+        const goalTop = H / 2 - goalW / 2;
+        // Left goal
+        ctx.beginPath();
+        ctx.moveTo(m, goalTop);
+        ctx.lineTo(m - 6, goalTop);
+        ctx.lineTo(m - 6, goalTop + goalW);
+        ctx.lineTo(m, goalTop + goalW);
+        ctx.stroke();
+        // Right goal
+        ctx.beginPath();
+        ctx.moveTo(W - m, goalTop);
+        ctx.lineTo(W - m + 6, goalTop);
+        ctx.lineTo(W - m + 6, goalTop + goalW);
+        ctx.lineTo(W - m, goalTop + goalW);
+        ctx.stroke();
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+      function clamp(v, lo, hi) {
+        return Math.max(lo, Math.min(hi, v));
+      }
+
+      // ─── App ───
+      function App() {
+        const [plays, setPlays] = useState(loadPlays);
+        const [mode, setMode] = useState("view"); // view | record | edit_meta
+        const [selKey, setSelKey] = useState(null);
+
+        // Playback
+        const [playing, setPlaying] = useState(false);
+        const [fi, setFi] = useState(0);
+        const [prog, setProg] = useState(0);
+        const [speed, setSpeed] = useState(1);
+        const animRef = useRef(null);
+        const t0Ref = useRef(0);
+
+        // Recording
+        const [recPlayers, setRecPlayers] = useState([]);
+        const [recDefs, setRecDefs] = useState([]);
+        const [recCones, setRecCones] = useState([]);
+        const [recBall, setRecBall] = useState({ x: 300, y: 340 });
+        const [recFrames, setRecFrames] = useState([]);
+        const [dragging, setDragging] = useState(null);
+
+        // Modals
+        const [showNoteModal, setShowNoteModal] = useState(false);
+        const [noteInput, setNoteInput] = useState("");
+        const [showSaveModal, setShowSaveModal] = useState(false);
+        const [saveName, setSaveName] = useState("");
+        const [saveDesc, setSaveDesc] = useState("");
+        const [saveAge, setSaveAge] = useState("u10");
+        const [saveNotes, setSaveNotes] = useState("");
+        const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+        const [showEditMeta, setShowEditMeta] = useState(false);
+        const [editName, setEditName] = useState("");
+        const [editDesc, setEditDesc] = useState("");
+        const [editAge, setEditAge] = useState("");
+        const [editNotes, setEditNotes] = useState("");
+
+        const svgRef = useRef(null);
+        const canvasRef = useCallback((node) => {
+          if (node) drawField(node);
+        }, []);
+
+        // Persist
+        useEffect(() => {
+          savePlays(plays);
+        }, [plays]);
+
+        // Current play
+        const curPlay = selKey ? plays[selKey] : null;
+        const curFrames = curPlay?.frames || [];
+        const totalF = curFrames.length;
+
+        // Organize by age group
+        const playsByAge = {};
+        Object.entries(plays).forEach(([k, p]) => {
+          const age = p.age || "u10";
+          if (!playsByAge[age]) playsByAge[age] = [];
+          playsByAge[age].push({ key: k, ...p });
+        });
+        const sortedAges = AGE_ORDER.filter((a) => playsByAge[a]);
+
+        // Playback
+        useEffect(() => {
+          if (!playing || fi >= totalF - 1) {
+            if (fi >= totalF - 1 && playing) setPlaying(false);
+            return;
+          }
+          t0Ref.current = performance.now();
+          const dur = 700 / speed;
+          const tick = (now) => {
+            const t = Math.min(1, (now - t0Ref.current) / dur);
+            setProg(t);
+            if (t >= 1) {
+              setFi((i) => i + 1);
+              setProg(0);
+              return;
+            }
+            animRef.current = requestAnimationFrame(tick);
+          };
+          animRef.current = requestAnimationFrame(tick);
+          return () => cancelAnimationFrame(animRef.current);
+        }, [playing, fi, totalF, speed]);
+
+        const snapshot = useCallback(() => {
+          if (totalF === 0) return null;
+          const i = clamp(fi, 0, totalF - 1);
+          const cur = curFrames[i],
+            nxt = i < totalF - 1 ? curFrames[i + 1] : cur;
+          const t = prog;
+          const pos = {};
+          for (const id of Object.keys(cur.positions)) {
+            pos[id] = {
+              x: lerp(
+                cur.positions[id].x,
+                (nxt.positions[id] || cur.positions[id]).x,
+                t,
+              ),
+              y: lerp(
+                cur.positions[id].y,
+                (nxt.positions[id] || cur.positions[id]).y,
+                t,
+              ),
+            };
+          }
+          const ball = {
+            x: lerp(cur.ball.x, nxt.ball.x, t),
+            y: lerp(cur.ball.y, nxt.ball.y, t),
+          };
+          return { pos, ball, note: cur.note };
+        }, [curFrames, totalF, fi, prog]);
+
+        const reset = () => {
+          cancelAnimationFrame(animRef.current);
+          setPlaying(false);
+          setFi(0);
+          setProg(0);
+        };
+        const selectPlay = (k) => {
+          reset();
+          setSelKey(k);
+          setMode("view");
+        };
+
+        // Recording
+        const startRec = () => {
+          setMode("record");
+          setRecFrames([]);
+          setRecPlayers([
+            { id: "A", x: 220, y: 340, color: "#E63946", label: "A" },
+            { id: "B", x: 360, y: 260, color: "#E63946", label: "B" },
+          ]);
+          setRecDefs([
+            { id: "D1", x: 300, y: 280, color: "#1D3557", label: "D" },
+          ]);
+          setRecCones([]);
+          setRecBall({ x: 220, y: 340 });
+        };
+
+        const addEntity = (isDef) => {
+          if (isDef) {
+            const n = recDefs.length + 1;
+            setRecDefs((d) => [
+              ...d,
+              {
+                id: `D${n}`,
+                x: 300 + Math.random() * 80,
+                y: 180 + Math.random() * 80,
+                color: "#1D3557",
+                label: `D${n > 1 ? n : ""}`,
+              },
+            ]);
+          } else {
+            const id = String.fromCharCode(65 + recPlayers.length);
+            setRecPlayers((p) => [
+              ...p,
+              {
+                id,
+                x: 180 + Math.random() * 100,
+                y: 200 + Math.random() * 100,
+                color: "#E63946",
+                label: id,
+              },
+            ]);
+          }
+        };
+
+        const removeEntity = (id, isDef) => {
+          if (isDef) setRecDefs((d) => d.filter((x) => x.id !== id));
+          else setRecPlayers((p) => p.filter((x) => x.id !== id));
+        };
+
+        const addCone = () => {
+          const n = recCones.length + 1;
+          setRecCones((c) => [
+            ...c,
+            {
+              id: `C${n}`,
+              x: 280 + Math.random() * 80,
+              y: 220 + Math.random() * 80,
+            },
+          ]);
+        };
+        const removeCone = (id) =>
+          setRecCones((c) => c.filter((x) => x.id !== id));
+
+        const captureFrame = (note) => {
+          const positions = {};
+          [...recPlayers, ...recDefs].forEach((p) => {
+            positions[p.id] = { x: Math.round(p.x), y: Math.round(p.y) };
+          });
+          setRecFrames((f) => [
+            ...f,
+            {
+              positions,
+              ball: { x: Math.round(recBall.x), y: Math.round(recBall.y) },
+              note: note || `Step ${f.length + 1}`,
+            },
+          ]);
+        };
+
+        const deleteFrame = (idx) =>
+          setRecFrames((f) => f.filter((_, i) => i !== idx));
+        const jumpToFrame = (idx) => {
+          const f = recFrames[idx];
+          if (!f) return;
+          setRecPlayers((ps) =>
+            ps.map((p) =>
+              f.positions[p.id]
+                ? { ...p, x: f.positions[p.id].x, y: f.positions[p.id].y }
+                : p,
+            ),
+          );
+          setRecDefs((ds) =>
+            ds.map((d) =>
+              f.positions[d.id]
+                ? { ...d, x: f.positions[d.id].x, y: f.positions[d.id].y }
+                : d,
+            ),
+          );
+          setRecBall({ ...f.ball });
+        };
+
+        const openSaveModal = () => {
+          if (recFrames.length < 2) return;
+          setSaveName("");
+          setSaveDesc("");
+          setSaveAge("u10");
+          setSaveNotes("");
+          setShowSaveModal(true);
+        };
+
+        const doSave = () => {
+          const name =
+            saveName.trim() || `Play ${Object.keys(plays).length + 1}`;
+          const key = `p_${Date.now()}`;
+          const newPlay = {
+            name,
+            description: saveDesc.trim(),
+            age: saveAge,
+            notes: saveNotes.trim(),
+            players: recPlayers.map((p) => ({ ...p })),
+            defenders: recDefs.map((d) => ({ ...d })),
+            cones: recCones.map((c) => ({ ...c })),
+            frames: [...recFrames],
+            created: Date.now(),
+          };
+          setPlays((pp) => ({ ...pp, [key]: newPlay }));
+
+          // Output for baking into DEFAULT_PLAYS
+          const slug = name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
+          console.log(
+            `%c── New play ready to bake in ──`,
+            "color:#2d8a4e;font-weight:bold",
+          );
+          console.log(`"${slug}":`, JSON.parse(JSON.stringify(newPlay)));
+          console.log(
+            `%cPaste the above into DEFAULT_PLAYS in default-plays.js.`,
+            "color:#888;font-style:italic",
+          );
+
+          setShowSaveModal(false);
+          setMode("view");
+          setSelKey(key);
+          setFi(0);
+          setProg(0);
+        };
+
+        const deletePlay = (key) => {
+          setPlays((pp) => {
+            const c = { ...pp };
+            delete c[key];
+            return c;
+          });
+          if (selKey === key) setSelKey(null);
+          setShowDeleteConfirm(null);
+        };
+
+        const openEditMeta = () => {
+          if (!curPlay) return;
+          setEditName(curPlay.name);
+          setEditDesc(curPlay.description || "");
+          setEditAge(curPlay.age || "u10");
+          setEditNotes(curPlay.notes || "");
+          setShowEditMeta(true);
+        };
+
+        const doEditMeta = () => {
+          setPlays((pp) => ({
+            ...pp,
+            [selKey]: {
+              ...pp[selKey],
+              name: editName.trim() || pp[selKey].name,
+              description: editDesc.trim(),
+              age: editAge,
+              notes: editNotes.trim(),
+            },
+          }));
+          setShowEditMeta(false);
+        };
+
+        // Drag
+        const getSVGPt = (e) => {
+          const r = svgRef.current?.getBoundingClientRect();
+          if (!r) return { x: 0, y: 0 };
+          const cx = e.touches ? e.touches[0].clientX : e.clientX;
+          const cy = e.touches ? e.touches[0].clientY : e.clientY;
+          return {
+            x: clamp(((cx - r.left) / r.width) * FIELD_W, 20, FIELD_W - 20),
+            y: clamp(((cy - r.top) / r.height) * FIELD_H, 20, FIELD_H - 20),
+          };
+        };
+
+        useEffect(() => {
+          if (!dragging) return;
+          const onMove = (e) => {
+            e.preventDefault();
+            const pt = getSVGPt(e);
+            if (dragging.type === "ball") setRecBall(pt);
+            else if (dragging.type === "player")
+              setRecPlayers((ps) =>
+                ps.map((p) => (p.id === dragging.id ? { ...p, ...pt } : p)),
+              );
+            else if (dragging.type === "cone")
+              setRecCones((cs) =>
+                cs.map((c) => (c.id === dragging.id ? { ...c, ...pt } : c)),
+              );
+            else
+              setRecDefs((ds) =>
+                ds.map((d) => (d.id === dragging.id ? { ...d, ...pt } : d)),
+              );
+          };
+          const onUp = () => setDragging(null);
+          window.addEventListener("pointermove", onMove, { passive: false });
+          window.addEventListener("pointerup", onUp);
+          return () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+          };
+        }, [dragging]);
+
+        // Render helpers
+        const snap = mode === "view" && curPlay ? snapshot() : null;
+        const fieldPlayers =
+          mode === "view" ? curPlay?.players || [] : recPlayers;
+        const fieldDefs = mode === "view" ? curPlay?.defenders || [] : recDefs;
+        const fieldCones = mode === "view" ? curPlay?.cones || [] : recCones;
+        const ballPos =
+          mode === "view" ? snap?.ball || { x: -50, y: -50 } : recBall;
+        const positions = snap?.pos || {};
+
+        const statusNote =
+          mode === "record"
+            ? recFrames.length === 0
+              ? "Drag players & ball into position, then capture your first frame."
+              : `${recFrames.length} frame${recFrames.length !== 1 ? "s" : ""} captured — move pieces to next position and capture again.`
+            : snap?.note || curPlay?.description || "";
+
+        const noPlays = Object.keys(plays).length === 0;
+
+        return (
+          <>
+            {/* Header */}
+            <div className="header">
+              <div style={{ display: "flex", alignItems: "baseline" }}>
+                <h1>Playbook</h1>
+                <span className="header-sub">Soccer Tactics</span>
+              </div>
+              {mode === "view" ? (
+                <button className="btn btn-rec" onClick={startRec}>
+                  <span className="dot" />
+                  Record New Play
+                </button>
               ) : (
-                sortedAges.map(age => (
-                  <div className="sb-section" key={age}>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button
+                    className="btn btn-outline"
+                    onClick={() => {
+                      setMode("view");
+                      reset();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-green"
+                    onClick={openSaveModal}
+                    style={{
+                      opacity: recFrames.length < 2 ? 0.4 : 1,
+                      pointerEvents: recFrames.length < 2 ? "none" : "auto",
+                    }}
+                  >
+                    Save Play ({recFrames.length} frames)
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="layout">
+              {/* Sidebar */}
+              <div className="sidebar">
+                {mode === "view" ? (
+                  <>
+                    {noPlays ? (
+                      <div className="sb-section">
+                        <p className="sb-empty">
+                          No plays yet. Record your first play to get started.
+                        </p>
+                      </div>
+                    ) : (
+                      sortedAges.map((age) => (
+                        <div className="sb-section" key={age}>
+                          <div className="sb-label">
+                            {AGE_GROUPS.find((a) => a.value === age)?.label ||
+                              age}
+                            <span className="count">
+                              {playsByAge[age].length}
+                            </span>
+                          </div>
+                          {playsByAge[age].map((p) => (
+                            <div
+                              key={p.key}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 2,
+                              }}
+                            >
+                              <button
+                                className={`sb-play ${selKey === p.key ? "active" : ""}`}
+                                onClick={() => selectPlay(p.key)}
+                                style={{ flex: 1 }}
+                              >
+                                {p.name}
+                              </button>
+                              <button
+                                className="btn-icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowDeleteConfirm(p.key);
+                                }}
+                                style={{
+                                  color: "var(--text3)",
+                                  fontSize: 13,
+                                  padding: "4px 6px",
+                                  flexShrink: 0,
+                                }}
+                                title="Delete play"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ))
+                    )}
+                  </>
+                ) : (
+                  /* Record sidebar */
+                  <div className="sb-section">
                     <div className="sb-label">
-                      {AGE_GROUPS.find(a => a.value === age)?.label || age}
-                      <span className="count">{playsByAge[age].length}</span>
+                      <span className="pulse-dot" /> Recording
                     </div>
-                    {playsByAge[age].map(p => (
-                      <div key={p.key} style={{ display: "flex", alignItems: "center", gap: 2 }}>
+
+                    <div className="sb-label" style={{ marginTop: 12 }}>
+                      Roster
+                    </div>
+                    {recPlayers.map((p) => (
+                      <div
+                        key={p.id}
+                        className="roster-item"
+                        style={{ background: "rgba(230,57,70,0.08)" }}
+                      >
+                        <span
+                          className="roster-dot"
+                          style={{ background: p.color }}
+                        />
+                        <span style={{ flex: 1, color: "#fff" }}>
+                          {p.label}
+                        </span>
                         <button
-                          className={`sb-play ${selKey === p.key ? "active" : ""}`}
-                          onClick={() => selectPlay(p.key)}
-                          style={{ flex: 1 }}
+                          className="roster-rm"
+                          onClick={() => removeEntity(p.id, false)}
                         >
-                          {p.name}
+                          ×
                         </button>
-                        <button
-                          className="btn-icon"
-                          onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(p.key); }}
-                          style={{ color: "var(--text3)", fontSize: 13, padding: "4px 6px", flexShrink: 0 }}
-                          title="Delete play"
-                        >×</button>
                       </div>
                     ))}
-                  </div>
-                ))
-              )}
-            </>
-          ) : (
-            /* Record sidebar */
-            <div className="sb-section">
-              <div className="sb-label"><span className="pulse-dot" /> Recording</div>
-
-              <div className="sb-label" style={{ marginTop: 12 }}>Roster</div>
-              {recPlayers.map(p => (
-                <div key={p.id} className="roster-item" style={{ background: "rgba(230,57,70,0.08)" }}>
-                  <span className="roster-dot" style={{ background: p.color }} />
-                  <span style={{ flex: 1, color: "#fff" }}>{p.label}</span>
-                  <button className="roster-rm" onClick={() => removeEntity(p.id, false)}>×</button>
-                </div>
-              ))}
-              {recDefs.map(d => (
-                <div key={d.id} className="roster-item" style={{ background: "rgba(29,53,87,0.12)" }}>
-                  <span className="roster-dot" style={{ background: d.color }} />
-                  <span style={{ flex: 1, color: "#fff" }}>{d.label}</span>
-                  <button className="roster-rm" onClick={() => removeEntity(d.id, true)}>×</button>
-                </div>
-              ))}
-              <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
-                <button className="btn btn-sm" style={{ flex: 1, border: "1px solid rgba(230,57,70,0.25)", background: "rgba(230,57,70,0.06)", color: "#E63946", fontWeight: 600 }} onClick={() => addEntity(false)} disabled={recPlayers.length >= 11}>+ Attacker</button>
-                <button className="btn btn-sm" style={{ flex: 1, border: "1px solid rgba(29,53,87,0.3)", background: "rgba(29,53,87,0.08)", color: "#5c8ab5", fontWeight: 600 }} onClick={() => addEntity(true)} disabled={recDefs.length >= 11}>+ Defender</button>
-              </div>
-
-              <div className="sb-label" style={{ marginTop: 16 }}>Keyframes ({recFrames.length})</div>
-              <div style={{ maxHeight: 200, overflowY: "auto" }}>
-                {recFrames.map((f, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 2, marginBottom: 2 }}>
-                    <button onClick={() => jumpToFrame(i)} style={{ flex: 1, padding: "5px 7px", borderRadius: 4, border: "1px solid var(--border)", background: "rgba(255,255,255,0.02)", color: "var(--text2)", fontSize: 11, textAlign: "left", cursor: "pointer", fontFamily: "var(--font)" }}>
-                      <span style={{ color: "var(--green)", fontWeight: 700, marginRight: 4 }}>{i + 1}</span>{f.note}
-                    </button>
-                    <button className="roster-rm" onClick={() => deleteFrame(i)}>×</button>
-                  </div>
-                ))}
-              </div>
-              <button className="btn-capture" onClick={() => { setNoteInput(""); setShowNoteModal(true); }} style={{ marginTop: 10 }}>
-                ◉ Capture Frame
-              </button>
-              <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 4, textAlign: "center" }}>Need at least 2 frames to save</div>
-            </div>
-          )}
-        </div>
-
-        {/* Main */}
-        <div className="main">
-          {mode === "view" && !curPlay ? (
-            <div className="empty-state">
-              <h2>{noPlays ? "Your Playbook is Empty" : "Select a Play"}</h2>
-              <p>{noPlays ? "Record your first play to build your coaching playbook. Organize by age group, add notes, and animate for your team." : "Choose a play from the sidebar to view the animation, or record a new one."}</p>
-              {noPlays && (
-                <button className="btn btn-rec" onClick={startRec}>
-                  <span className="dot" />Record Your First Play
-                </button>
-              )}
-            </div>
-          ) : (
-            <>
-              {/* Play metadata */}
-              {mode === "view" && curPlay && (
-                <div className="play-meta">
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                    <div>
-                      <div className="play-age">{AGE_GROUPS.find(a => a.value === curPlay.age)?.label || curPlay.age}</div>
-                      <div className="play-title">{curPlay.name}</div>
-                      {curPlay.description && <div className="play-desc">{curPlay.description}</div>}
-                    </div>
-                    <button className="btn btn-outline btn-sm" onClick={openEditMeta}>Edit Details</button>
-                  </div>
-                </div>
-              )}
-
-              {/* Status */}
-              <div className={`status ${mode === "record" ? "status-rec" : "status-view"}`}>
-                {mode === "record" && <span className="pulse-dot" />}
-                {statusNote}
-              </div>
-
-              {/* Field */}
-              <div className="field-wrap" style={{ width: FIELD_W, height: FIELD_H }}>
-                <canvas ref={canvasRef} className="field-canvas" style={{ width: FIELD_W, height: FIELD_H }} />
-                <svg ref={svgRef} className="field-svg" width={FIELD_W} height={FIELD_H}>
-                  {fieldDefs.map(d => {
-                    const p = mode === "view" ? (positions[d.id] || d) : d;
-                    return (
-                      <g key={d.id} onPointerDown={mode === "record" ? e => { e.preventDefault(); setDragging({ id: d.id, type: "def" }); } : undefined} style={{ cursor: mode === "record" ? "grab" : "default" }}>
-                        {mode === "record" && <circle cx={p.x} cy={p.y} r={PLAYER_R+4} fill="none" stroke="rgba(255,255,255,0.08)" strokeDasharray="3,3" />}
-                        <circle cx={p.x} cy={p.y} r={PLAYER_R} fill={d.color} stroke="rgba(0,0,0,0.35)" strokeWidth={1.5} />
-                        <text x={p.x} y={p.y+1} textAnchor="middle" dominantBaseline="central" fill="#FFF" fontSize="11" fontWeight="700" fontFamily="'Bricolage Grotesque',sans-serif" style={{ userSelect: "none", pointerEvents: "none" }}>{d.label}</text>
-                      </g>
-                    );
-                  })}
-                  {fieldPlayers.map(pl => {
-                    const p = mode === "view" ? (positions[pl.id] || pl) : pl;
-                    return (
-                      <g key={pl.id} onPointerDown={mode === "record" ? e => { e.preventDefault(); setDragging({ id: pl.id, type: "player" }); } : undefined} style={{ cursor: mode === "record" ? "grab" : "default" }}>
-                        {mode === "record" && <circle cx={p.x} cy={p.y} r={PLAYER_R+4} fill="none" stroke="rgba(255,255,255,0.08)" strokeDasharray="3,3" />}
-                        <circle cx={p.x} cy={p.y} r={PLAYER_R} fill={pl.color} stroke="rgba(0,0,0,0.35)" strokeWidth={1.5} />
-                        <circle cx={p.x} cy={p.y} r={PLAYER_R} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={0.5} />
-                        <text x={p.x} y={p.y+1} textAnchor="middle" dominantBaseline="central" fill="#FFF" fontSize="11" fontWeight="700" fontFamily="'Bricolage Grotesque',sans-serif" style={{ userSelect: "none", pointerEvents: "none" }}>{pl.label}</text>
-                      </g>
-                    );
-                  })}
-                  <g onPointerDown={mode === "record" ? e => { e.preventDefault(); setDragging({ id: "ball", type: "ball" }); } : undefined} style={{ cursor: mode === "record" ? "grab" : "default" }}>
-                    {mode === "record" && <circle cx={ballPos.x} cy={ballPos.y} r={BALL_R+5} fill="none" stroke="rgba(255,255,255,0.12)" strokeDasharray="2,2" />}
-                    <circle cx={ballPos.x} cy={ballPos.y} r={BALL_R} fill="#FFF" stroke="#333" strokeWidth={1} />
-                    <circle cx={ballPos.x-1.5} cy={ballPos.y-1.5} r={2} fill="rgba(0,0,0,0.1)" />
-                  </g>
-                </svg>
-              </div>
-
-              {/* Playback controls */}
-              {mode === "view" && totalF > 0 && (
-                <>
-                  <div className="controls">
-                    {!playing ? (
-                      <button className="btn btn-green" onClick={() => { if (fi >= totalF-1) { setFi(0); setProg(0); } setPlaying(true); }} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 1L11 6L2 11V1Z" fill="white"/></svg>
-                        {fi >= totalF-1 ? "Replay" : "Play"}
-                      </button>
-                    ) : (
-                      <button className="btn" style={{ background: "#c9753d", color: "#fff" }} onClick={() => setPlaying(false)}>Pause</button>
-                    )}
-                    <button className="btn btn-outline" onClick={reset}>Reset</button>
-                    <button className="btn btn-outline btn-sm" onClick={() => { setPlaying(false); setFi(i => Math.max(0, i-1)); setProg(0); }} disabled={fi <= 0} style={{ opacity: fi <= 0 ? 0.3 : 1 }}>◀ Prev</button>
-                    <button className="btn btn-outline btn-sm" onClick={() => { setPlaying(false); setFi(i => Math.min(totalF-1, i+1)); setProg(0); }} disabled={fi >= totalF-1} style={{ opacity: fi >= totalF-1 ? 0.3 : 1 }}>Next ▶</button>
-                    <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5 }}>
-                      <span style={{ fontSize: 10, color: "var(--text3)" }}>Speed</span>
-                      {[0.5, 1, 2].map(s => (
-                        <button key={s} className="btn btn-sm" style={{
-                          border: speed === s ? "1px solid var(--green3)" : "1px solid var(--border)",
-                          background: speed === s ? "var(--green2)" : "transparent",
-                          color: speed === s ? "#b8e6c8" : "var(--text3)",
+                    {recDefs.map((d) => (
+                      <div
+                        key={d.id}
+                        className="roster-item"
+                        style={{ background: "rgba(29,53,87,0.12)" }}
+                      >
+                        <span
+                          className="roster-dot"
+                          style={{ background: d.color }}
+                        />
+                        <span style={{ flex: 1, color: "#fff" }}>
+                          {d.label}
+                        </span>
+                        <button
+                          className="roster-rm"
+                          onClick={() => removeEntity(d.id, true)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                    <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
+                      <button
+                        className="btn btn-sm"
+                        style={{
+                          flex: 1,
+                          border: "1px solid rgba(230,57,70,0.25)",
+                          background: "rgba(230,57,70,0.06)",
+                          color: "#E63946",
                           fontWeight: 600,
-                        }} onClick={() => setSpeed(s)}>{s}x</button>
+                        }}
+                        onClick={() => addEntity(false)}
+                        disabled={recPlayers.length >= 11}
+                      >
+                        + Attacker
+                      </button>
+                      <button
+                        className="btn btn-sm"
+                        style={{
+                          flex: 1,
+                          border: "1px solid rgba(29,53,87,0.3)",
+                          background: "rgba(29,53,87,0.08)",
+                          color: "#5c8ab5",
+                          fontWeight: 600,
+                        }}
+                        onClick={() => addEntity(true)}
+                        disabled={recDefs.length >= 11}
+                      >
+                        + Defender
+                      </button>
+                    </div>
+
+                    {recCones.length > 0 && (
+                      <div style={{ marginTop: 10 }}>
+                        {recCones.map((c) => (
+                          <div
+                            key={c.id}
+                            className="roster-item"
+                            style={{ background: "rgba(249,115,22,0.08)" }}
+                          >
+                            <span style={{ fontSize: 10, marginRight: 2 }}>
+                              ▲
+                            </span>
+                            <span
+                              style={{
+                                flex: 1,
+                                color: "#F97316",
+                                fontSize: 11.5,
+                              }}
+                            >
+                              Cone
+                            </span>
+                            <button
+                              className="roster-rm"
+                              onClick={() => removeCone(c.id)}
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <button
+                      className="btn btn-sm"
+                      style={{
+                        width: "100%",
+                        marginTop: 6,
+                        border: "1px solid rgba(249,115,22,0.3)",
+                        background: "rgba(249,115,22,0.06)",
+                        color: "#F97316",
+                        fontWeight: 600,
+                      }}
+                      onClick={addCone}
+                    >
+                      + Cone
+                    </button>
+
+                    <div className="sb-label" style={{ marginTop: 16 }}>
+                      Keyframes ({recFrames.length})
+                    </div>
+                    <div style={{ maxHeight: 200, overflowY: "auto" }}>
+                      {recFrames.map((f, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 2,
+                            marginBottom: 2,
+                          }}
+                        >
+                          <button
+                            onClick={() => jumpToFrame(i)}
+                            style={{
+                              flex: 1,
+                              padding: "5px 7px",
+                              borderRadius: 4,
+                              border: "1px solid var(--border)",
+                              background: "rgba(255,255,255,0.02)",
+                              color: "var(--text2)",
+                              fontSize: 11,
+                              textAlign: "left",
+                              cursor: "pointer",
+                              fontFamily: "var(--font)",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "var(--green)",
+                                fontWeight: 700,
+                                marginRight: 4,
+                              }}
+                            >
+                              {i + 1}
+                            </span>
+                            {f.note}
+                          </button>
+                          <button
+                            className="roster-rm"
+                            onClick={() => deleteFrame(i)}
+                          >
+                            ×
+                          </button>
+                        </div>
                       ))}
                     </div>
+                    <button
+                      className="btn-capture"
+                      onClick={() => {
+                        setNoteInput("");
+                        setShowNoteModal(true);
+                      }}
+                      style={{ marginTop: 10 }}
+                    >
+                      ◉ Capture Frame
+                    </button>
+                    <div
+                      style={{
+                        fontSize: 10,
+                        color: "var(--text3)",
+                        marginTop: 4,
+                        textAlign: "center",
+                      }}
+                    >
+                      Need at least 2 frames to save
+                    </div>
                   </div>
-                  <div className="progress-bar">
-                    {curFrames.map((_, i) => (
-                      <div key={i} className="progress-seg" onClick={() => { setPlaying(false); setFi(i); setProg(0); }} style={{
-                        background: i < fi ? "var(--green)" : i === fi ? `linear-gradient(90deg, var(--green) ${prog*100}%, rgba(255,255,255,0.06) ${prog*100}%)` : "rgba(255,255,255,0.05)",
-                      }} />
-                    ))}
-                  </div>
-                  <div className="step-legend">
-                    {curFrames.map((f, i) => (
-                      <div key={i} className="step-chip" onClick={() => { setPlaying(false); setFi(i); setProg(0); }} style={{
-                        color: i <= fi ? "var(--text)" : "var(--text3)",
-                        background: i === fi ? "var(--green2)" : "transparent",
-                        borderColor: i === fi ? "var(--green3)" : "transparent",
-                        fontWeight: i === fi ? 600 : 400,
-                      }}>{f.note}</div>
-                    ))}
-                  </div>
-                </>
-              )}
+                )}
+              </div>
 
-              {/* Coach notes */}
-              {mode === "view" && curPlay?.notes && (
-                <div className="play-notes" style={{ marginTop: 16 }}>
-                  <div className="play-notes-label">Coach Notes</div>
-                  <div className="play-notes-text">{curPlay.notes}</div>
+              {/* Main */}
+              <div className="main">
+                {mode === "view" && !curPlay ? (
+                  <div className="empty-state">
+                    <h2>
+                      {noPlays ? "Your Playbook is Empty" : "Select a Play"}
+                    </h2>
+                    <p>
+                      {noPlays
+                        ? "Record your first play to build your coaching playbook. Organize by age group, add notes, and animate for your team."
+                        : "Choose a play from the sidebar to view the animation, or record a new one."}
+                    </p>
+                    {noPlays && (
+                      <button className="btn btn-rec" onClick={startRec}>
+                        <span className="dot" />
+                        Record Your First Play
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    {/* Play metadata */}
+                    {mode === "view" && curPlay && (
+                      <div className="play-meta">
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <div>
+                            <div className="play-age">
+                              {AGE_GROUPS.find((a) => a.value === curPlay.age)
+                                ?.label || curPlay.age}
+                            </div>
+                            <div className="play-title">{curPlay.name}</div>
+                            {curPlay.description && (
+                              <div className="play-desc">
+                                {curPlay.description}
+                              </div>
+                            )}
+                          </div>
+                          <button
+                            className="btn btn-outline btn-sm"
+                            onClick={openEditMeta}
+                          >
+                            Edit Details
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Status */}
+                    <div
+                      className={`status ${mode === "record" ? "status-rec" : "status-view"}`}
+                    >
+                      {mode === "record" && <span className="pulse-dot" />}
+                      {statusNote}
+                    </div>
+
+                    {/* Field */}
+                    <div
+                      className="field-wrap"
+                      style={{ width: FIELD_W, height: FIELD_H }}
+                    >
+                      <canvas
+                        ref={canvasRef}
+                        className="field-canvas"
+                        style={{ width: FIELD_W, height: FIELD_H }}
+                      />
+                      <svg
+                        ref={svgRef}
+                        className="field-svg"
+                        width={FIELD_W}
+                        height={FIELD_H}
+                      >
+                        {fieldCones.map((c) => (
+                          <g
+                            key={c.id}
+                            onPointerDown={
+                              mode === "record"
+                                ? (e) => {
+                                    e.preventDefault();
+                                    setDragging({ id: c.id, type: "cone" });
+                                  }
+                                : undefined
+                            }
+                            style={{
+                              cursor: mode === "record" ? "grab" : "default",
+                            }}
+                          >
+                            {mode === "record" && (
+                              <circle
+                                cx={c.x}
+                                cy={c.y}
+                                r={14}
+                                fill="none"
+                                stroke="rgba(255,255,255,0.08)"
+                                strokeDasharray="3,3"
+                              />
+                            )}
+                            <ellipse
+                              cx={c.x}
+                              cy={c.y + 5}
+                              rx={6}
+                              ry={2.5}
+                              fill="rgba(0,0,0,0.25)"
+                            />
+                            <polygon
+                              points={`${c.x},${c.y - 11} ${c.x - 7},${c.y + 5} ${c.x + 7},${c.y + 5}`}
+                              fill="#F97316"
+                              stroke="#c45a0a"
+                              strokeWidth={1}
+                              strokeLinejoin="round"
+                            />
+                            <polygon
+                              points={`${c.x},${c.y - 11} ${c.x - 7},${c.y + 5} ${c.x + 7},${c.y + 5}`}
+                              fill="url(#coneShine)"
+                              opacity={0.3}
+                            />
+                          </g>
+                        ))}
+                        {fieldDefs.map((d) => {
+                          const p = mode === "view" ? positions[d.id] || d : d;
+                          return (
+                            <g
+                              key={d.id}
+                              onPointerDown={
+                                mode === "record"
+                                  ? (e) => {
+                                      e.preventDefault();
+                                      setDragging({ id: d.id, type: "def" });
+                                    }
+                                  : undefined
+                              }
+                              style={{
+                                cursor: mode === "record" ? "grab" : "default",
+                              }}
+                            >
+                              {mode === "record" && (
+                                <circle
+                                  cx={p.x}
+                                  cy={p.y}
+                                  r={PLAYER_R + 4}
+                                  fill="none"
+                                  stroke="rgba(255,255,255,0.08)"
+                                  strokeDasharray="3,3"
+                                />
+                              )}
+                              <circle
+                                cx={p.x}
+                                cy={p.y}
+                                r={PLAYER_R}
+                                fill={d.color}
+                                stroke="rgba(0,0,0,0.35)"
+                                strokeWidth={1.5}
+                              />
+                              <text
+                                x={p.x}
+                                y={p.y + 1}
+                                textAnchor="middle"
+                                dominantBaseline="central"
+                                fill="#FFF"
+                                fontSize="11"
+                                fontWeight="700"
+                                fontFamily="'Bricolage Grotesque',sans-serif"
+                                style={{
+                                  userSelect: "none",
+                                  pointerEvents: "none",
+                                }}
+                              >
+                                {d.label}
+                              </text>
+                            </g>
+                          );
+                        })}
+                        {fieldPlayers.map((pl) => {
+                          const p =
+                            mode === "view" ? positions[pl.id] || pl : pl;
+                          return (
+                            <g
+                              key={pl.id}
+                              onPointerDown={
+                                mode === "record"
+                                  ? (e) => {
+                                      e.preventDefault();
+                                      setDragging({
+                                        id: pl.id,
+                                        type: "player",
+                                      });
+                                    }
+                                  : undefined
+                              }
+                              style={{
+                                cursor: mode === "record" ? "grab" : "default",
+                              }}
+                            >
+                              {mode === "record" && (
+                                <circle
+                                  cx={p.x}
+                                  cy={p.y}
+                                  r={PLAYER_R + 4}
+                                  fill="none"
+                                  stroke="rgba(255,255,255,0.08)"
+                                  strokeDasharray="3,3"
+                                />
+                              )}
+                              <circle
+                                cx={p.x}
+                                cy={p.y}
+                                r={PLAYER_R}
+                                fill={pl.color}
+                                stroke="rgba(0,0,0,0.35)"
+                                strokeWidth={1.5}
+                              />
+                              <circle
+                                cx={p.x}
+                                cy={p.y}
+                                r={PLAYER_R}
+                                fill="none"
+                                stroke="rgba(255,255,255,0.15)"
+                                strokeWidth={0.5}
+                              />
+                              <text
+                                x={p.x}
+                                y={p.y + 1}
+                                textAnchor="middle"
+                                dominantBaseline="central"
+                                fill="#FFF"
+                                fontSize="11"
+                                fontWeight="700"
+                                fontFamily="'Bricolage Grotesque',sans-serif"
+                                style={{
+                                  userSelect: "none",
+                                  pointerEvents: "none",
+                                }}
+                              >
+                                {pl.label}
+                              </text>
+                            </g>
+                          );
+                        })}
+                        <g
+                          onPointerDown={
+                            mode === "record"
+                              ? (e) => {
+                                  e.preventDefault();
+                                  setDragging({ id: "ball", type: "ball" });
+                                }
+                              : undefined
+                          }
+                          style={{
+                            cursor: mode === "record" ? "grab" : "default",
+                          }}
+                        >
+                          {mode === "record" && (
+                            <circle
+                              cx={ballPos.x}
+                              cy={ballPos.y}
+                              r={BALL_R + 5}
+                              fill="none"
+                              stroke="rgba(255,255,255,0.12)"
+                              strokeDasharray="2,2"
+                            />
+                          )}
+                          <circle
+                            cx={ballPos.x}
+                            cy={ballPos.y}
+                            r={BALL_R}
+                            fill="#FFF"
+                            stroke="#333"
+                            strokeWidth={1}
+                          />
+                          <circle
+                            cx={ballPos.x - 1.5}
+                            cy={ballPos.y - 1.5}
+                            r={2}
+                            fill="rgba(0,0,0,0.1)"
+                          />
+                        </g>
+                      </svg>
+                    </div>
+
+                    {/* Playback controls */}
+                    {mode === "view" && totalF > 0 && (
+                      <>
+                        <div className="controls">
+                          {!playing ? (
+                            <button
+                              className="btn btn-green"
+                              onClick={() => {
+                                if (fi >= totalF - 1) {
+                                  setFi(0);
+                                  setProg(0);
+                                }
+                                setPlaying(true);
+                              }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                              }}
+                            >
+                              <svg width="11" height="11" viewBox="0 0 12 12">
+                                <path d="M2 1L11 6L2 11V1Z" fill="white" />
+                              </svg>
+                              {fi >= totalF - 1 ? "Replay" : "Play"}
+                            </button>
+                          ) : (
+                            <button
+                              className="btn"
+                              style={{ background: "#c9753d", color: "#fff" }}
+                              onClick={() => setPlaying(false)}
+                            >
+                              Pause
+                            </button>
+                          )}
+                          <button className="btn btn-outline" onClick={reset}>
+                            Reset
+                          </button>
+                          <button
+                            className="btn btn-outline btn-sm"
+                            onClick={() => {
+                              setPlaying(false);
+                              setFi((i) => Math.max(0, i - 1));
+                              setProg(0);
+                            }}
+                            disabled={fi <= 0}
+                            style={{ opacity: fi <= 0 ? 0.3 : 1 }}
+                          >
+                            ◀ Prev
+                          </button>
+                          <button
+                            className="btn btn-outline btn-sm"
+                            onClick={() => {
+                              setPlaying(false);
+                              setFi((i) => Math.min(totalF - 1, i + 1));
+                              setProg(0);
+                            }}
+                            disabled={fi >= totalF - 1}
+                            style={{ opacity: fi >= totalF - 1 ? 0.3 : 1 }}
+                          >
+                            Next ▶
+                          </button>
+                          <div
+                            style={{
+                              marginLeft: "auto",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 5,
+                            }}
+                          >
+                            <span
+                              style={{ fontSize: 10, color: "var(--text3)" }}
+                            >
+                              Speed
+                            </span>
+                            {[0.5, 1, 2].map((s) => (
+                              <button
+                                key={s}
+                                className="btn btn-sm"
+                                style={{
+                                  border:
+                                    speed === s
+                                      ? "1px solid var(--green3)"
+                                      : "1px solid var(--border)",
+                                  background:
+                                    speed === s
+                                      ? "var(--green2)"
+                                      : "transparent",
+                                  color:
+                                    speed === s ? "#b8e6c8" : "var(--text3)",
+                                  fontWeight: 600,
+                                }}
+                                onClick={() => setSpeed(s)}
+                              >
+                                {s}x
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="progress-bar">
+                          {curFrames.map((_, i) => (
+                            <div
+                              key={i}
+                              className="progress-seg"
+                              onClick={() => {
+                                setPlaying(false);
+                                setFi(i);
+                                setProg(0);
+                              }}
+                              style={{
+                                background:
+                                  i < fi
+                                    ? "var(--green)"
+                                    : i === fi
+                                      ? `linear-gradient(90deg, var(--green) ${prog * 100}%, rgba(255,255,255,0.06) ${prog * 100}%)`
+                                      : "rgba(255,255,255,0.05)",
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="step-legend">
+                          {curFrames.map((f, i) => (
+                            <div
+                              key={i}
+                              className="step-chip"
+                              onClick={() => {
+                                setPlaying(false);
+                                setFi(i);
+                                setProg(0);
+                              }}
+                              style={{
+                                color: i <= fi ? "var(--text)" : "var(--text3)",
+                                background:
+                                  i === fi ? "var(--green2)" : "transparent",
+                                borderColor:
+                                  i === fi ? "var(--green3)" : "transparent",
+                                fontWeight: i === fi ? 600 : 400,
+                              }}
+                            >
+                              {f.note}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {/* Coach notes */}
+                    {mode === "view" && curPlay?.notes && (
+                      <div className="play-notes" style={{ marginTop: 16 }}>
+                        <div className="play-notes-label">Coach Notes</div>
+                        <div className="play-notes-text">{curPlay.notes}</div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Frame note modal */}
+            {showNoteModal && (
+              <div
+                className="modal-overlay"
+                onClick={() => setShowNoteModal(false)}
+              >
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                  <h3>Describe this step</h3>
+                  <div className="field-group">
+                    <input
+                      autoFocus
+                      value={noteInput}
+                      onChange={(e) => setNoteInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          captureFrame(
+                            noteInput || `Step ${recFrames.length + 1}`,
+                          );
+                          setShowNoteModal(false);
+                        }
+                      }}
+                      placeholder={`Step ${recFrames.length + 1}`}
+                    />
+                  </div>
+                  <div className="modal-actions">
+                    <button
+                      className="btn btn-outline"
+                      onClick={() => setShowNoteModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn btn-green"
+                      onClick={() => {
+                        captureFrame(
+                          noteInput || `Step ${recFrames.length + 1}`,
+                        );
+                        setShowNoteModal(false);
+                      }}
+                    >
+                      Capture
+                    </button>
+                  </div>
                 </div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
+              </div>
+            )}
 
-      {/* Frame note modal */}
-      {showNoteModal && (
-        <div className="modal-overlay" onClick={() => setShowNoteModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <h3>Describe this step</h3>
-            <div className="field-group">
-              <input autoFocus value={noteInput} onChange={e => setNoteInput(e.target.value)}
-                onKeyDown={e => { if (e.key === "Enter") { captureFrame(noteInput || `Step ${recFrames.length+1}`); setShowNoteModal(false); }}}
-                placeholder={`Step ${recFrames.length + 1}`} />
-            </div>
-            <div className="modal-actions">
-              <button className="btn btn-outline" onClick={() => setShowNoteModal(false)}>Cancel</button>
-              <button className="btn btn-green" onClick={() => { captureFrame(noteInput || `Step ${recFrames.length+1}`); setShowNoteModal(false); }}>Capture</button>
-            </div>
-          </div>
-        </div>
-      )}
+            {/* Save modal */}
+            {showSaveModal && (
+              <div
+                className="modal-overlay"
+                onClick={() => setShowSaveModal(false)}
+              >
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                  <h3>Save Play</h3>
+                  <div className="field-group">
+                    <label>Play Name</label>
+                    <input
+                      autoFocus
+                      value={saveName}
+                      onChange={(e) => setSaveName(e.target.value)}
+                      placeholder="e.g. Wall Pass"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") doSave();
+                      }}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Age Group</label>
+                    <select
+                      value={saveAge}
+                      onChange={(e) => setSaveAge(e.target.value)}
+                    >
+                      {AGE_GROUPS.map((a) => (
+                        <option key={a.value} value={a.value}>
+                          {a.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field-group">
+                    <label>Description (optional)</label>
+                    <input
+                      value={saveDesc}
+                      onChange={(e) => setSaveDesc(e.target.value)}
+                      placeholder="Brief description of the play"
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Coach Notes (optional)</label>
+                    <textarea
+                      value={saveNotes}
+                      onChange={(e) => setSaveNotes(e.target.value)}
+                      placeholder="Teaching points, when to use this play, common mistakes to watch for..."
+                      rows={3}
+                    />
+                  </div>
+                  <div className="modal-actions">
+                    <button
+                      className="btn btn-outline"
+                      onClick={() => setShowSaveModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button className="btn btn-green" onClick={doSave}>
+                      Save Play
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
-      {/* Save modal */}
-      {showSaveModal && (
-        <div className="modal-overlay" onClick={() => setShowSaveModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <h3>Save Play</h3>
-            <div className="field-group">
-              <label>Play Name</label>
-              <input autoFocus value={saveName} onChange={e => setSaveName(e.target.value)} placeholder="e.g. Wall Pass" onKeyDown={e => { if (e.key === "Enter") doSave(); }} />
-            </div>
-            <div className="field-group">
-              <label>Age Group</label>
-              <select value={saveAge} onChange={e => setSaveAge(e.target.value)}>
-                {AGE_GROUPS.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
-              </select>
-            </div>
-            <div className="field-group">
-              <label>Description (optional)</label>
-              <input value={saveDesc} onChange={e => setSaveDesc(e.target.value)} placeholder="Brief description of the play" />
-            </div>
-            <div className="field-group">
-              <label>Coach Notes (optional)</label>
-              <textarea value={saveNotes} onChange={e => setSaveNotes(e.target.value)} placeholder="Teaching points, when to use this play, common mistakes to watch for..." rows={3} />
-            </div>
-            <div className="modal-actions">
-              <button className="btn btn-outline" onClick={() => setShowSaveModal(false)}>Cancel</button>
-              <button className="btn btn-green" onClick={doSave}>Save Play</button>
-            </div>
-          </div>
-        </div>
-      )}
+            {/* Edit meta modal */}
+            {showEditMeta && (
+              <div
+                className="modal-overlay"
+                onClick={() => setShowEditMeta(false)}
+              >
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                  <h3>Edit Play Details</h3>
+                  <div className="field-group">
+                    <label>Play Name</label>
+                    <input
+                      autoFocus
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Age Group</label>
+                    <select
+                      value={editAge}
+                      onChange={(e) => setEditAge(e.target.value)}
+                    >
+                      {AGE_GROUPS.map((a) => (
+                        <option key={a.value} value={a.value}>
+                          {a.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field-group">
+                    <label>Description</label>
+                    <input
+                      value={editDesc}
+                      onChange={(e) => setEditDesc(e.target.value)}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Coach Notes</label>
+                    <textarea
+                      value={editNotes}
+                      onChange={(e) => setEditNotes(e.target.value)}
+                      rows={4}
+                    />
+                  </div>
+                  <div className="modal-actions">
+                    <button
+                      className="btn btn-outline"
+                      onClick={() => setShowEditMeta(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button className="btn btn-green" onClick={doEditMeta}>
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
-      {/* Edit meta modal */}
-      {showEditMeta && (
-        <div className="modal-overlay" onClick={() => setShowEditMeta(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <h3>Edit Play Details</h3>
-            <div className="field-group">
-              <label>Play Name</label>
-              <input autoFocus value={editName} onChange={e => setEditName(e.target.value)} />
-            </div>
-            <div className="field-group">
-              <label>Age Group</label>
-              <select value={editAge} onChange={e => setEditAge(e.target.value)}>
-                {AGE_GROUPS.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
-              </select>
-            </div>
-            <div className="field-group">
-              <label>Description</label>
-              <input value={editDesc} onChange={e => setEditDesc(e.target.value)} />
-            </div>
-            <div className="field-group">
-              <label>Coach Notes</label>
-              <textarea value={editNotes} onChange={e => setEditNotes(e.target.value)} rows={4} />
-            </div>
-            <div className="modal-actions">
-              <button className="btn btn-outline" onClick={() => setShowEditMeta(false)}>Cancel</button>
-              <button className="btn btn-green" onClick={doEditMeta}>Save Changes</button>
-            </div>
-          </div>
-        </div>
-      )}
+            {/* Delete confirm */}
+            {showDeleteConfirm && (
+              <div
+                className="modal-overlay"
+                onClick={() => setShowDeleteConfirm(null)}
+              >
+                <div
+                  className="modal"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ width: 340 }}
+                >
+                  <h3>Delete Play</h3>
+                  <p className="confirm-text">
+                    Remove "{plays[showDeleteConfirm]?.name}"?
+                  </p>
+                  <p className="confirm-sub">This can't be undone.</p>
+                  <div className="modal-actions">
+                    <button
+                      className="btn btn-outline"
+                      onClick={() => setShowDeleteConfirm(null)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn btn-red"
+                      onClick={() => deletePlay(showDeleteConfirm)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        );
+      }
 
-      {/* Delete confirm */}
-      {showDeleteConfirm && (
-        <div className="modal-overlay" onClick={() => setShowDeleteConfirm(null)}>
-          <div className="modal" onClick={e => e.stopPropagation()} style={{ width: 340 }}>
-            <h3>Delete Play</h3>
-            <p className="confirm-text">Remove "{plays[showDeleteConfirm]?.name}"?</p>
-            <p className="confirm-sub">This can't be undone.</p>
-            <div className="modal-actions">
-              <button className="btn btn-outline" onClick={() => setShowDeleteConfirm(null)}>Cancel</button>
-              <button className="btn btn-red" onClick={() => deletePlay(showDeleteConfirm)}>Delete</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("app")).render(<App />);
-</script>
-</body>
+      ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+    </script>
+  </body>
 </html>
