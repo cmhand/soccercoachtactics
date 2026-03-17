@@ -252,4 +252,128 @@ var DEFAULT_PLAYS = {
     ],
     created: 1773758770247,
   },
+  "switch-the-field": {
+    name: "Switch the Field",
+    description:
+      "When defenders are loaded and heavy on one side of the field, take the opportunity to play the ball to the opposite side to stretch the defense and play into space.",
+    age: "u12",
+    notes:
+      "Teach players on the attack to stretch the field and use it's width.",
+    players: [
+      {
+        id: "A",
+        x: 273.1015625,
+        y: 341.28515625,
+        color: "#E63946",
+        label: "A",
+      },
+      {
+        id: "B",
+        x: 276.671875,
+        y: 230.63281250000003,
+        color: "#E63946",
+        label: "B",
+      },
+      {
+        id: "C",
+        x: 320.2109375,
+        y: 85.36328125,
+        color: "#E63946",
+        label: "C",
+      },
+    ],
+    defenders: [
+      {
+        id: "D1",
+        x: 310.2265625,
+        y: 352.78125,
+        color: "#1D3557",
+        label: "D",
+      },
+      {
+        id: "D2",
+        x: 311.00390625,
+        y: 279.35546875,
+        color: "#1D3557",
+        label: "D2",
+      },
+      {
+        id: "D3",
+        x: 310.546875,
+        y: 202.49609375,
+        color: "#1D3557",
+        label: "D3",
+      },
+    ],
+    cones: [],
+    frames: [
+      {
+        positions: {
+          A: {
+            x: 220,
+            y: 340,
+          },
+          B: {
+            x: 248,
+            y: 230,
+          },
+          C: {
+            x: 266,
+            y: 93,
+          },
+          D1: {
+            x: 310,
+            y: 353,
+          },
+          D2: {
+            x: 311,
+            y: 279,
+          },
+          D3: {
+            x: 311,
+            y: 202,
+          },
+        },
+        ball: {
+          x: 220,
+          y: 340,
+        },
+        note: "Setup - Defenders Loaded on One Side",
+      },
+      {
+        positions: {
+          A: {
+            x: 273,
+            y: 341,
+          },
+          B: {
+            x: 277,
+            y: 231,
+          },
+          C: {
+            x: 320,
+            y: 85,
+          },
+          D1: {
+            x: 310,
+            y: 353,
+          },
+          D2: {
+            x: 311,
+            y: 279,
+          },
+          D3: {
+            x: 311,
+            y: 202,
+          },
+        },
+        ball: {
+          x: 343,
+          y: 89,
+        },
+        note: "Wing Plays Ball to Opposite Side of Field, Into Space",
+      },
+    ],
+    created: 1773760777708,
+  },
 };

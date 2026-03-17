@@ -22,9 +22,9 @@
         --surface2: #1a231c;
         --border: rgba(255, 255, 255, 0.07);
         --border2: rgba(255, 255, 255, 0.12);
-        --text: #d4cfc6;
-        --text2: rgba(255, 255, 255, 0.4);
-        --text3: rgba(255, 255, 255, 0.2);
+        --text: #edeae4;
+        --text2: rgba(255, 255, 255, 0.65);
+        --text3: rgba(255, 255, 255, 0.38);
         --green: #2d8a4e;
         --green2: rgba(45, 138, 78, 0.15);
         --green3: rgba(45, 138, 78, 0.35);
@@ -721,6 +721,12 @@
       function clamp(v, lo, hi) {
         return Math.max(lo, Math.min(hi, v));
       }
+      function arrowHeadPoints(x1, y1, x2, y2, size = 11) {
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const a1 = angle + Math.PI * 0.75;
+        const a2 = angle - Math.PI * 0.75;
+        return `${x2},${y2} ${x2 + size * Math.cos(a1)},${y2 + size * Math.sin(a1)} ${x2 + size * Math.cos(a2)},${y2 + size * Math.sin(a2)}`;
+      }
 
       // ─── App ───
       function App() {
@@ -740,6 +746,7 @@
         const [recPlayers, setRecPlayers] = useState([]);
         const [recDefs, setRecDefs] = useState([]);
         const [recCones, setRecCones] = useState([]);
+        const [recArrows, setRecArrows] = useState([]);
         const [recBall, setRecBall] = useState({ x: 300, y: 340 });
         const [recFrames, setRecFrames] = useState([]);
         const [dragging, setDragging] = useState(null);
@@ -857,6 +864,7 @@
             { id: "D1", x: 300, y: 280, color: "#1D3557", label: "D" },
           ]);
           setRecCones([]);
+          setRecArrows([]);
           setRecBall({ x: 220, y: 340 });
         };
 
@@ -907,6 +915,16 @@
         const removeCone = (id) =>
           setRecCones((c) => c.filter((x) => x.id !== id));
 
+        const addArrow = () => {
+          const n = recArrows.length + 1;
+          setRecArrows((a) => [
+            ...a,
+            { id: `AR${n}`, x1: 260, y1: 230, x2: 340, y2: 230 },
+          ]);
+        };
+        const removeArrow = (id) =>
+          setRecArrows((a) => a.filter((x) => x.id !== id));
+
         const captureFrame = (note) => {
           const positions = {};
           [...recPlayers, ...recDefs].forEach((p) => {
@@ -917,6 +935,7 @@
             {
               positions,
               ball: { x: Math.round(recBall.x), y: Math.round(recBall.y) },
+              arrows: recArrows.map((a) => ({ ...a })),
               note: note || `Step ${f.length + 1}`,
             },
           ]);
@@ -942,6 +961,7 @@
             ),
           );
           setRecBall({ ...f.ball });
+          setRecArrows(f.arrows ? f.arrows.map((a) => ({ ...a })) : []);
         };
 
         const openSaveModal = () => {
@@ -1051,6 +1071,18 @@
               setRecCones((cs) =>
                 cs.map((c) => (c.id === dragging.id ? { ...c, ...pt } : c)),
               );
+            else if (dragging.type === "arrow-tail")
+              setRecArrows((as) =>
+                as.map((a) =>
+                  a.id === dragging.id ? { ...a, x1: pt.x, y1: pt.y } : a,
+                ),
+              );
+            else if (dragging.type === "arrow-head")
+              setRecArrows((as) =>
+                as.map((a) =>
+                  a.id === dragging.id ? { ...a, x2: pt.x, y2: pt.y } : a,
+                ),
+              );
             else
               setRecDefs((ds) =>
                 ds.map((d) => (d.id === dragging.id ? { ...d, ...pt } : d)),
@@ -1071,6 +1103,10 @@
           mode === "view" ? curPlay?.players || [] : recPlayers;
         const fieldDefs = mode === "view" ? curPlay?.defenders || [] : recDefs;
         const fieldCones = mode === "view" ? curPlay?.cones || [] : recCones;
+        const fieldArrows =
+          mode === "view"
+            ? curFrames[fi]?.arrows || []
+            : recArrows;
         const ballPos =
           mode === "view" ? snap?.ball || { x: -50, y: -50 } : recBall;
         const positions = snap?.pos || {};
@@ -1307,6 +1343,36 @@
                       onClick={addCone}
                     >
                       + Cone
+                    </button>
+
+                    {recArrows.length > 0 && (
+                      <div style={{ marginTop: 10 }}>
+                        {recArrows.map((a) => (
+                          <div
+                            key={a.id}
+                            className="roster-item"
+                            style={{ background: "rgba(250,204,21,0.08)" }}
+                          >
+                            <span style={{ fontSize: 11, marginRight: 2, color: "#FACC15" }}>→</span>
+                            <span style={{ flex: 1, color: "#FACC15", fontSize: 11.5 }}>Arrow</span>
+                            <button className="roster-rm" onClick={() => removeArrow(a.id)}>×</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <button
+                      className="btn btn-sm"
+                      style={{
+                        width: "100%",
+                        marginTop: 6,
+                        border: "1px solid rgba(250,204,21,0.3)",
+                        background: "rgba(250,204,21,0.06)",
+                        color: "#FACC15",
+                        fontWeight: 600,
+                      }}
+                      onClick={addArrow}
+                    >
+                      + Arrow
                     </button>
 
                     <div className="sb-label" style={{ marginTop: 16 }}>
@@ -1663,6 +1729,35 @@
                             fill="rgba(0,0,0,0.1)"
                           />
                         </g>
+                        {fieldArrows.map((a) => (
+                          <g key={a.id}>
+                            <line
+                              x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2}
+                              stroke="#FACC15" strokeWidth={2.5}
+                              strokeLinecap="round"
+                            />
+                            <polygon
+                              points={arrowHeadPoints(a.x1, a.y1, a.x2, a.y2)}
+                              fill="#FACC15"
+                            />
+                            {mode === "record" && (
+                              <>
+                                <circle
+                                  cx={a.x1} cy={a.y1} r={6}
+                                  fill="#FACC15" stroke="#000" strokeWidth={1}
+                                  style={{ cursor: "grab" }}
+                                  onPointerDown={(e) => { e.preventDefault(); setDragging({ id: a.id, type: "arrow-tail" }); }}
+                                />
+                                <circle
+                                  cx={a.x2} cy={a.y2} r={6}
+                                  fill="#FACC15" stroke="#000" strokeWidth={1}
+                                  style={{ cursor: "grab" }}
+                                  onPointerDown={(e) => { e.preventDefault(); setDragging({ id: a.id, type: "arrow-head" }); }}
+                                />
+                              </>
+                            )}
+                          </g>
+                        ))}
                       </svg>
                     </div>
 
