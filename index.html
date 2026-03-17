@@ -8,8 +8,18 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/android-chrome-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/android-chrome-512x512.png"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap"
       rel="stylesheet"
@@ -1110,9 +1120,7 @@
         const fieldDefs = mode === "view" ? curPlay?.defenders || [] : recDefs;
         const fieldCones = mode === "view" ? curPlay?.cones || [] : recCones;
         const fieldArrows =
-          mode === "view"
-            ? curFrames[fi]?.arrows || []
-            : recArrows;
+          mode === "view" ? curFrames[fi]?.arrows || [] : recArrows;
         const ballPos =
           mode === "view" ? snap?.ball || { x: -50, y: -50 } : recBall;
         const positions = snap?.pos || {};
@@ -1359,9 +1367,30 @@
                             className="roster-item"
                             style={{ background: "rgba(250,204,21,0.08)" }}
                           >
-                            <span style={{ fontSize: 11, marginRight: 2, color: "#FACC15" }}>→</span>
-                            <span style={{ flex: 1, color: "#FACC15", fontSize: 11.5 }}>Arrow</span>
-                            <button className="roster-rm" onClick={() => removeArrow(a.id)}>×</button>
+                            <span
+                              style={{
+                                fontSize: 11,
+                                marginRight: 2,
+                                color: "#FACC15",
+                              }}
+                            >
+                              →
+                            </span>
+                            <span
+                              style={{
+                                flex: 1,
+                                color: "#FACC15",
+                                fontSize: 11.5,
+                              }}
+                            >
+                              Arrow
+                            </span>
+                            <button
+                              className="roster-rm"
+                              onClick={() => removeArrow(a.id)}
+                            >
+                              ×
+                            </button>
                           </div>
                         ))}
                       </div>
@@ -1738,8 +1767,12 @@
                         {fieldArrows.map((a) => (
                           <g key={a.id}>
                             <line
-                              x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2}
-                              stroke="#FACC15" strokeWidth={2.5}
+                              x1={a.x1}
+                              y1={a.y1}
+                              x2={a.x2}
+                              y2={a.y2}
+                              stroke="#FACC15"
+                              strokeWidth={2.5}
                               strokeLinecap="round"
                             />
                             <polygon
@@ -1749,16 +1782,36 @@
                             {mode === "record" && (
                               <>
                                 <circle
-                                  cx={a.x1} cy={a.y1} r={6}
-                                  fill="#FACC15" stroke="#000" strokeWidth={1}
+                                  cx={a.x1}
+                                  cy={a.y1}
+                                  r={6}
+                                  fill="#FACC15"
+                                  stroke="#000"
+                                  strokeWidth={1}
                                   style={{ cursor: "grab" }}
-                                  onPointerDown={(e) => { e.preventDefault(); setDragging({ id: a.id, type: "arrow-tail" }); }}
+                                  onPointerDown={(e) => {
+                                    e.preventDefault();
+                                    setDragging({
+                                      id: a.id,
+                                      type: "arrow-tail",
+                                    });
+                                  }}
                                 />
                                 <circle
-                                  cx={a.x2} cy={a.y2} r={6}
-                                  fill="#FACC15" stroke="#000" strokeWidth={1}
+                                  cx={a.x2}
+                                  cy={a.y2}
+                                  r={6}
+                                  fill="#FACC15"
+                                  stroke="#000"
+                                  strokeWidth={1}
                                   style={{ cursor: "grab" }}
-                                  onPointerDown={(e) => { e.preventDefault(); setDragging({ id: a.id, type: "arrow-head" }); }}
+                                  onPointerDown={(e) => {
+                                    e.preventDefault();
+                                    setDragging({
+                                      id: a.id,
+                                      type: "arrow-head",
+                                    });
+                                  }}
                                 />
                               </>
                             )}
