@@ -115,4 +115,141 @@ var DEFAULT_PLAYS = {
     ],
     created: 1773757767119,
   },
+  "through-ball": {
+    name: "Through Ball",
+    description: "Play the ball through defenders to space.",
+    age: "u12",
+    notes:
+      "A great way to start an attack when defenders are up field and playing flat.",
+    players: [
+      {
+        id: "A",
+        x: 312.16015625,
+        y: 211.88671875,
+        color: "#E63946",
+        label: "A",
+      },
+      {
+        id: "B",
+        x: 429.80078125,
+        y: 270.33984375,
+        color: "#E63946",
+        label: "B",
+      },
+    ],
+    defenders: [
+      {
+        id: "D1",
+        x: 342.5625,
+        y: 321.40234375,
+        color: "#1D3557",
+        label: "D",
+      },
+      {
+        id: "D2",
+        x: 341.57421875,
+        y: 232.5625,
+        color: "#1D3557",
+        label: "D2",
+      },
+      {
+        id: "D3",
+        x: 343.23828125,
+        y: 156.453125,
+        color: "#1D3557",
+        label: "D3",
+      },
+    ],
+    cones: [],
+    frames: [
+      {
+        positions: {
+          A: {
+            x: 259,
+            y: 289,
+          },
+          B: {
+            x: 325,
+            y: 191,
+          },
+          D1: {
+            x: 343,
+            y: 321,
+          },
+          D2: {
+            x: 342,
+            y: 233,
+          },
+          D3: {
+            x: 343,
+            y: 156,
+          },
+        },
+        ball: {
+          x: 260,
+          y: 292,
+        },
+        note: "Setup - Flat Defenders",
+      },
+      {
+        positions: {
+          A: {
+            x: 259,
+            y: 289,
+          },
+          B: {
+            x: 392,
+            y: 221,
+          },
+          D1: {
+            x: 343,
+            y: 321,
+          },
+          D2: {
+            x: 342,
+            y: 233,
+          },
+          D3: {
+            x: 343,
+            y: 156,
+          },
+        },
+        ball: {
+          x: 382,
+          y: 285,
+        },
+        note: "Pass - Through Defenders to Space",
+      },
+      {
+        positions: {
+          A: {
+            x: 312,
+            y: 212,
+          },
+          B: {
+            x: 430,
+            y: 270,
+          },
+          D1: {
+            x: 343,
+            y: 321,
+          },
+          D2: {
+            x: 342,
+            y: 233,
+          },
+          D3: {
+            x: 343,
+            y: 156,
+          },
+        },
+        ball: {
+          x: 439,
+          y: 284,
+        },
+        note: "Striker Intercepts",
+      },
+    ],
+    created: 1773758770247,
+  },
 };
