@@ -1228,7 +1228,7 @@
 
             <div className="layout">
               {/* Sidebar */}
-              <div className="sidebar">
+              <div className="sidebar" style={mode === "record" ? { display: "flex", flexDirection: "column", overflowY: "hidden" } : undefined}>
                 {mode === "view" ? (
                   <>
                     {noPlays ? (
@@ -1287,11 +1287,13 @@
                   </>
                 ) : (
                   /* Record sidebar */
-                  <div className="sb-section">
+                  <div className="sb-section" style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", marginBottom: 0 }}>
                     <div className="sb-label">
                       <span className="pulse-dot" /> Recording
                     </div>
 
+                    {/* Scrollable roster area */}
+                    <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
                     <div className="sb-label" style={{ marginTop: 12 }}>
                       Roster
                     </div>
@@ -1463,11 +1465,14 @@
                     >
                       + Arrow
                     </button>
+                    </div>{/* end scrollable roster area */}
 
-                    <div className="sb-label" style={{ marginTop: 16 }}>
+                    {/* Pinned bottom: keyframes + capture */}
+                    <div style={{ flexShrink: 0, borderTop: "1px solid var(--border)", paddingTop: 10, marginTop: 6 }}>
+                    <div className="sb-label">
                       Keyframes ({recFrames.length})
                     </div>
-                    <div style={{ maxHeight: 200, overflowY: "auto" }}>
+                    <div style={{ maxHeight: 140, overflowY: "auto" }}>
                       {recFrames.map((f, i) => (
                         <div
                           key={i}
@@ -1547,6 +1552,7 @@
                     >
                       Need at least 2 frames to save
                     </div>
+                    </div>{/* end pinned bottom */}
                   </div>
                 )}
               </div>
