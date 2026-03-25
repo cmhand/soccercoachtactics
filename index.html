@@ -289,7 +289,6 @@
       .field-wrap {
         position: relative;
         width: 100%;
-        max-width: 640px;
         aspect-ratio: 640 / 460;
         border-radius: 10px;
         overflow: hidden;
@@ -402,15 +401,18 @@
         margin-top: 8px;
       }
       .play-stage {
-        display: grid;
-        grid-template-columns: minmax(360px, 1fr) minmax(240px, 300px);
+        display: flex;
+        flex-wrap: wrap;
         gap: 20px;
         align-items: start;
       }
       .play-stage-main {
+        flex: 1 1 640px;
         min-width: 0;
       }
       .play-stage-notes {
+        flex: 1 1 260px;
+        max-width: 320px;
         display: flex;
         flex-direction: column;
         gap: 14px;
@@ -600,8 +602,8 @@
         }
       }
       @media (max-width: 980px) {
-        .play-stage {
-          grid-template-columns: 1fr;
+        .play-stage-notes {
+          max-width: none;
         }
       }
     </style>
@@ -659,9 +661,14 @@
       function drawField(canvas) {
         const ctx = canvas.getContext("2d");
         const dpr = window.devicePixelRatio || 1;
-        canvas.width = FIELD_W * dpr;
-        canvas.height = FIELD_H * dpr;
-        ctx.scale(dpr, dpr);
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(
+          (rect.width * dpr) / FIELD_W,
+          (rect.height * dpr) / FIELD_H,
+        );
 
         const W = FIELD_W,
           H = FIELD_H;
@@ -833,8 +840,15 @@
         const [editNotes, setEditNotes] = useState("");
 
         const svgRef = useRef(null);
-        const canvasRef = useCallback((node) => {
-          if (node) drawField(node);
+        const canvasRef = useRef(null);
+
+        useEffect(() => {
+          const canvas = canvasRef.current;
+          if (!canvas) return;
+          drawField(canvas);
+          const ro = new ResizeObserver(() => drawField(canvas));
+          ro.observe(canvas.parentElement);
+          return () => ro.disconnect();
         }, []);
 
         // Persist
