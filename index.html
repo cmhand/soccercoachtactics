@@ -288,20 +288,27 @@
       /* Field */
       .field-wrap {
         position: relative;
+        width: 100%;
+        max-width: 640px;
+        aspect-ratio: 640 / 460;
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0 6px 28px rgba(0, 0, 0, 0.4);
-        display: inline-block;
+        display: block;
       }
       .field-canvas {
         position: absolute;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 100%;
       }
       .field-svg {
         position: absolute;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 100%;
         touch-action: none;
       }
 
@@ -394,12 +401,38 @@
         line-height: 1.55;
         margin-top: 8px;
       }
+      .play-stage {
+        display: grid;
+        grid-template-columns: minmax(360px, 1fr) minmax(240px, 300px);
+        gap: 20px;
+        align-items: start;
+      }
+      .play-stage-main {
+        min-width: 0;
+      }
+      .play-stage-notes {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
       .play-notes {
-        margin-top: 14px;
-        padding: 12px 14px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.025);
-        border: 1px solid var(--border);
+        padding: 16px 18px;
+        border-radius: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.045) 0%,
+          rgba(255, 255, 255, 0.025) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+      }
+      .play-notes-active {
+        border-color: rgba(45, 138, 78, 0.32);
+        background: linear-gradient(
+          180deg,
+          rgba(45, 138, 78, 0.16) 0%,
+          rgba(45, 138, 78, 0.06) 100%
+        );
       }
       .play-notes-label {
         font-size: 10px;
@@ -409,13 +442,24 @@
         font-weight: 700;
         margin-bottom: 6px;
       }
+      .play-notes-step {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 8px;
+      }
       .play-notes-text {
         font-family: var(--serif);
-        font-size: 14px;
+        font-size: 15px;
         color: var(--text);
         line-height: 1.65;
         font-style: italic;
         white-space: pre-wrap;
+      }
+      .play-notes-empty {
+        font-size: 13px;
+        color: var(--text3);
+        line-height: 1.6;
       }
 
       /* Empty state */
@@ -553,6 +597,11 @@
         }
         .main {
           padding: 12px 14px 30px;
+        }
+      }
+      @media (max-width: 980px) {
+        .play-stage {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -770,6 +819,7 @@
         // Modals
         const [showNoteModal, setShowNoteModal] = useState(false);
         const [noteInput, setNoteInput] = useState("");
+        const [noteCoachInput, setNoteCoachInput] = useState("");
         const [showSaveModal, setShowSaveModal] = useState(false);
         const [saveName, setSaveName] = useState("");
         const [saveDesc, setSaveDesc] = useState("");
@@ -796,6 +846,9 @@
         const curPlay = selKey ? plays[selKey] : null;
         const curFrames = curPlay?.frames || [];
         const totalF = curFrames.length;
+        const activeFrame =
+          totalF > 0 ? curFrames[clamp(fi, 0, totalF - 1)] : null;
+        const activeFrameNote = activeFrame?.coachNote?.trim();
 
         // Organize by age group
         const playsByAge = {};
@@ -941,7 +994,7 @@
         const removeArrow = (id) =>
           setRecArrows((a) => a.filter((x) => x.id !== id));
 
-        const captureFrame = (note) => {
+        const captureFrame = (note, coachNote = "") => {
           const positions = {};
           [...recPlayers, ...recDefs].forEach((p) => {
             positions[p.id] = { x: Math.round(p.x), y: Math.round(p.y) };
@@ -953,6 +1006,7 @@
               ball: { x: Math.round(recBall.x), y: Math.round(recBall.y) },
               arrows: recArrows.map((a) => ({ ...a })),
               note: note || `Step ${f.length + 1}`,
+              coachNote: coachNote.trim(),
             },
           ]);
         };
@@ -1448,7 +1502,20 @@
                             >
                               {i + 1}
                             </span>
-                            {f.note}
+                            <div>{f.note || `Step ${i + 1}`}</div>
+                            {f.coachNote && (
+                              <div
+                                style={{
+                                  marginTop: 3,
+                                  fontSize: 10,
+                                  color: "var(--text3)",
+                                  whiteSpace: "normal",
+                                  lineHeight: 1.45,
+                                }}
+                              >
+                                {f.coachNote}
+                              </div>
+                            )}
                           </button>
                           <button
                             className="roster-rm"
@@ -1463,6 +1530,7 @@
                       className="btn-capture"
                       onClick={() => {
                         setNoteInput("");
+                        setNoteCoachInput("");
                         setShowNoteModal(true);
                       }}
                       style={{ marginTop: 10 }}
@@ -1546,20 +1614,16 @@
 
                     {/* Field */}
                     <div
-                      className="field-wrap"
-                      style={{ width: FIELD_W, height: FIELD_H }}
+                      className={mode === "view" && curPlay ? "play-stage" : ""}
                     >
-                      <canvas
-                        ref={canvasRef}
-                        className="field-canvas"
-                        style={{ width: FIELD_W, height: FIELD_H }}
-                      />
-                      <svg
-                        ref={svgRef}
-                        className="field-svg"
-                        width={FIELD_W}
-                        height={FIELD_H}
-                      >
+                      <div className="play-stage-main">
+                        <div className="field-wrap">
+                          <canvas ref={canvasRef} className="field-canvas" />
+                          <svg
+                            ref={svgRef}
+                            className="field-svg"
+                            viewBox={`0 0 ${FIELD_W} ${FIELD_H}`}
+                          >
                         {fieldCones.map((c) => (
                           <g
                             key={c.id}
@@ -1817,161 +1881,203 @@
                             )}
                           </g>
                         ))}
-                      </svg>
-                    </div>
+                          </svg>
+                        </div>
 
-                    {/* Playback controls */}
-                    {mode === "view" && totalF > 0 && (
-                      <>
-                        <div className="controls">
-                          {!playing ? (
-                            <button
-                              className="btn btn-green"
-                              onClick={() => {
-                                if (fi >= totalF - 1) {
-                                  setFi(0);
-                                  setProg(0);
-                                }
-                                setPlaying(true);
-                              }}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                              }}
-                            >
-                              <svg width="11" height="11" viewBox="0 0 12 12">
-                                <path d="M2 1L11 6L2 11V1Z" fill="white" />
-                              </svg>
-                              {fi >= totalF - 1 ? "Replay" : "Play"}
-                            </button>
-                          ) : (
-                            <button
-                              className="btn"
-                              style={{ background: "#c9753d", color: "#fff" }}
-                              onClick={() => setPlaying(false)}
-                            >
-                              Pause
-                            </button>
-                          )}
-                          <button className="btn btn-outline" onClick={reset}>
-                            Reset
-                          </button>
-                          <button
-                            className="btn btn-outline btn-sm"
-                            onClick={() => {
-                              setPlaying(false);
-                              setFi((i) => Math.max(0, i - 1));
-                              setProg(0);
-                            }}
-                            disabled={fi <= 0}
-                            style={{ opacity: fi <= 0 ? 0.3 : 1 }}
-                          >
-                            ◀ Prev
-                          </button>
-                          <button
-                            className="btn btn-outline btn-sm"
-                            onClick={() => {
-                              setPlaying(false);
-                              setFi((i) => Math.min(totalF - 1, i + 1));
-                              setProg(0);
-                            }}
-                            disabled={fi >= totalF - 1}
-                            style={{ opacity: fi >= totalF - 1 ? 0.3 : 1 }}
-                          >
-                            Next ▶
-                          </button>
-                          <div
-                            style={{
-                              marginLeft: "auto",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 5,
-                            }}
-                          >
-                            <span
-                              style={{ fontSize: 10, color: "var(--text3)" }}
-                            >
-                              Speed
-                            </span>
-                            {[0.5, 1, 2].map((s) => (
-                              <button
-                                key={s}
-                                className="btn btn-sm"
-                                style={{
-                                  border:
-                                    speed === s
-                                      ? "1px solid var(--green3)"
-                                      : "1px solid var(--border)",
-                                  background:
-                                    speed === s
-                                      ? "var(--green2)"
-                                      : "transparent",
-                                  color:
-                                    speed === s ? "#b8e6c8" : "var(--text3)",
-                                  fontWeight: 600,
-                                }}
-                                onClick={() => setSpeed(s)}
-                              >
-                                {s}x
+                        {/* Playback controls */}
+                        {mode === "view" && totalF > 0 && (
+                          <>
+                            <div className="controls">
+                              {!playing ? (
+                                <button
+                                  className="btn btn-green"
+                                  onClick={() => {
+                                    if (fi >= totalF - 1) {
+                                      setFi(0);
+                                      setProg(0);
+                                    }
+                                    setPlaying(true);
+                                  }}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 6,
+                                  }}
+                                >
+                                  <svg width="11" height="11" viewBox="0 0 12 12">
+                                    <path d="M2 1L11 6L2 11V1Z" fill="white" />
+                                  </svg>
+                                  {fi >= totalF - 1 ? "Replay" : "Play"}
+                                </button>
+                              ) : (
+                                <button
+                                  className="btn"
+                                  style={{
+                                    background: "#c9753d",
+                                    color: "#fff",
+                                  }}
+                                  onClick={() => setPlaying(false)}
+                                >
+                                  Pause
+                                </button>
+                              )}
+                              <button className="btn btn-outline" onClick={reset}>
+                                Reset
                               </button>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="progress-bar">
-                          {curFrames.map((_, i) => (
-                            <div
-                              key={i}
-                              className="progress-seg"
-                              onClick={() => {
-                                setPlaying(false);
-                                setFi(i);
-                                setProg(0);
-                              }}
-                              style={{
-                                background:
-                                  i < fi
-                                    ? "var(--green)"
-                                    : i === fi
-                                      ? `linear-gradient(90deg, var(--green) ${prog * 100}%, rgba(255,255,255,0.06) ${prog * 100}%)`
-                                      : "rgba(255,255,255,0.05)",
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <div className="step-legend">
-                          {curFrames.map((f, i) => (
-                            <div
-                              key={i}
-                              className="step-chip"
-                              onClick={() => {
-                                setPlaying(false);
-                                setFi(i);
-                                setProg(0);
-                              }}
-                              style={{
-                                color: i <= fi ? "var(--text)" : "var(--text3)",
-                                background:
-                                  i === fi ? "var(--green2)" : "transparent",
-                                borderColor:
-                                  i === fi ? "var(--green3)" : "transparent",
-                                fontWeight: i === fi ? 600 : 400,
-                              }}
-                            >
-                              {f.note}
+                              <button
+                                className="btn btn-outline btn-sm"
+                                onClick={() => {
+                                  setPlaying(false);
+                                  setFi((i) => Math.max(0, i - 1));
+                                  setProg(0);
+                                }}
+                                disabled={fi <= 0}
+                                style={{ opacity: fi <= 0 ? 0.3 : 1 }}
+                              >
+                                ◀ Prev
+                              </button>
+                              <button
+                                className="btn btn-outline btn-sm"
+                                onClick={() => {
+                                  setPlaying(false);
+                                  setFi((i) => Math.min(totalF - 1, i + 1));
+                                  setProg(0);
+                                }}
+                                disabled={fi >= totalF - 1}
+                                style={{ opacity: fi >= totalF - 1 ? 0.3 : 1 }}
+                              >
+                                Next ▶
+                              </button>
+                              <div
+                                style={{
+                                  marginLeft: "auto",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 5,
+                                }}
+                              >
+                                <span
+                                  style={{ fontSize: 10, color: "var(--text3)" }}
+                                >
+                                  Speed
+                                </span>
+                                {[0.5, 1, 2].map((s) => (
+                                  <button
+                                    key={s}
+                                    className="btn btn-sm"
+                                    style={{
+                                      border:
+                                        speed === s
+                                          ? "1px solid var(--green3)"
+                                          : "1px solid var(--border)",
+                                      background:
+                                        speed === s
+                                          ? "var(--green2)"
+                                          : "transparent",
+                                      color:
+                                        speed === s
+                                          ? "#b8e6c8"
+                                          : "var(--text3)",
+                                      fontWeight: 600,
+                                    }}
+                                    onClick={() => setSpeed(s)}
+                                  >
+                                    {s}x
+                                  </button>
+                                ))}
+                              </div>
                             </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    {/* Coach notes */}
-                    {mode === "view" && curPlay?.notes && (
-                      <div className="play-notes" style={{ marginTop: 16 }}>
-                        <div className="play-notes-label">Coach Notes</div>
-                        <div className="play-notes-text">{curPlay.notes}</div>
+                            <div className="progress-bar">
+                              {curFrames.map((_, i) => (
+                                <div
+                                  key={i}
+                                  className="progress-seg"
+                                  onClick={() => {
+                                    setPlaying(false);
+                                    setFi(i);
+                                    setProg(0);
+                                  }}
+                                  style={{
+                                    background:
+                                      i < fi
+                                        ? "var(--green)"
+                                        : i === fi
+                                          ? `linear-gradient(90deg, var(--green) ${prog * 100}%, rgba(255,255,255,0.06) ${prog * 100}%)`
+                                          : "rgba(255,255,255,0.05)",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div className="step-legend">
+                              {curFrames.map((f, i) => (
+                                <div
+                                  key={i}
+                                  className="step-chip"
+                                  onClick={() => {
+                                    setPlaying(false);
+                                    setFi(i);
+                                    setProg(0);
+                                  }}
+                                  style={{
+                                    color:
+                                      i <= fi ? "var(--text)" : "var(--text3)",
+                                    background:
+                                      i === fi
+                                        ? "var(--green2)"
+                                        : "transparent",
+                                    borderColor:
+                                      i === fi
+                                        ? "var(--green3)"
+                                        : "transparent",
+                                    fontWeight: i === fi ? 600 : 400,
+                                  }}
+                                >
+                                  {f.note || `Step ${i + 1}`}
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
                       </div>
-                    )}
+
+                      {mode === "view" && curPlay && (
+                        <aside className="play-stage-notes">
+                          <div className="play-notes play-notes-active">
+                            <div className="play-notes-label">Current Step</div>
+                            <div className="play-notes-step">
+                              {activeFrame?.note ||
+                                `Step ${Math.min(fi + 1, totalF || 1)}`}
+                            </div>
+                            {activeFrameNote ? (
+                              <div className="play-notes-text">
+                                {activeFrameNote}
+                              </div>
+                            ) : (
+                              <div className="play-notes-empty">
+                                Add an optional coach note to any captured step
+                                to highlight the teaching point for that moment.
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="play-notes">
+                            <div className="play-notes-label">
+                              Overall Coach Notes
+                            </div>
+                            {curPlay.notes ? (
+                              <div className="play-notes-text">
+                                {curPlay.notes}
+                              </div>
+                            ) : (
+                              <div className="play-notes-empty">
+                                No overall coach notes have been added for this
+                                play yet.
+                              </div>
+                            )}
+                          </div>
+                        </aside>
+                      )}
+                    </div>
                   </>
                 )}
               </div>
@@ -1984,8 +2090,9 @@
                 onClick={() => setShowNoteModal(false)}
               >
                 <div className="modal" onClick={(e) => e.stopPropagation()}>
-                  <h3>Describe this step</h3>
+                  <h3>Capture Step</h3>
                   <div className="field-group">
+                    <label>Step Label (optional)</label>
                     <input
                       autoFocus
                       value={noteInput}
@@ -1994,11 +2101,21 @@
                         if (e.key === "Enter") {
                           captureFrame(
                             noteInput || `Step ${recFrames.length + 1}`,
+                            noteCoachInput,
                           );
                           setShowNoteModal(false);
                         }
                       }}
                       placeholder={`Step ${recFrames.length + 1}`}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Coach Note (optional)</label>
+                    <textarea
+                      value={noteCoachInput}
+                      onChange={(e) => setNoteCoachInput(e.target.value)}
+                      placeholder="What should the coach emphasize on this step?"
+                      rows={4}
                     />
                   </div>
                   <div className="modal-actions">
@@ -2013,11 +2130,12 @@
                       onClick={() => {
                         captureFrame(
                           noteInput || `Step ${recFrames.length + 1}`,
+                          noteCoachInput,
                         );
                         setShowNoteModal(false);
                       }}
                     >
-                      Capture
+                      Capture Step
                     </button>
                   </div>
                 </div>
@@ -2066,7 +2184,7 @@
                     />
                   </div>
                   <div className="field-group">
-                    <label>Coach Notes (optional)</label>
+                    <label>Overall Coach Notes (optional)</label>
                     <textarea
                       value={saveNotes}
                       onChange={(e) => setSaveNotes(e.target.value)}
@@ -2126,7 +2244,7 @@
                     />
                   </div>
                   <div className="field-group">
-                    <label>Coach Notes</label>
+                    <label>Overall Coach Notes</label>
                     <textarea
                       value={editNotes}
                       onChange={(e) => setEditNotes(e.target.value)}
