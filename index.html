@@ -840,15 +840,17 @@
         const [editNotes, setEditNotes] = useState("");
 
         const svgRef = useRef(null);
-        const canvasRef = useRef(null);
-
-        useEffect(() => {
-          const canvas = canvasRef.current;
-          if (!canvas) return;
-          drawField(canvas);
-          const ro = new ResizeObserver(() => drawField(canvas));
-          ro.observe(canvas.parentElement);
-          return () => ro.disconnect();
+        const canvasRoRef = useRef(null);
+        const canvasRef = useCallback((node) => {
+          if (canvasRoRef.current) {
+            canvasRoRef.current.disconnect();
+            canvasRoRef.current = null;
+          }
+          if (node) {
+            drawField(node);
+            canvasRoRef.current = new ResizeObserver(() => drawField(node));
+            canvasRoRef.current.observe(node.parentElement);
+          }
         }, []);
 
         // Persist
