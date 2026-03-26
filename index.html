@@ -288,7 +288,7 @@
       /* Field */
       .field-wrap {
         position: relative;
-        width: 100%;
+        width: min(100%, calc((100vh - 260px) * 640 / 460));
         aspect-ratio: 640 / 460;
         border-radius: 10px;
         overflow: hidden;
@@ -871,6 +871,23 @@
           savePlays(plays);
         }, [plays]);
 
+        // Deep-link: read hash on mount and on back/forward navigation
+        useEffect(() => {
+          const applyHash = () => {
+            const hash = decodeURIComponent(
+              window.location.hash.replace(/^#/, ""),
+            );
+            if (hash && plays[hash]) {
+              reset();
+              setSelKey(hash);
+              setMode("view");
+            }
+          };
+          applyHash();
+          window.addEventListener("hashchange", applyHash);
+          return () => window.removeEventListener("hashchange", applyHash);
+        }, []);
+
         // Current play
         const curPlay = selKey ? plays[selKey] : null;
         const curFrames = curPlay?.frames || [];
@@ -948,6 +965,7 @@
           reset();
           setSelKey(k);
           setMode("view");
+          history.replaceState(null, "", "#" + encodeURIComponent(k));
         };
 
         // Recording
@@ -1109,6 +1127,7 @@
           setSelKey(key);
           setFi(0);
           setProg(0);
+          history.replaceState(null, "", "#" + encodeURIComponent(key));
         };
 
         const deletePlay = (key) => {
@@ -1117,7 +1136,10 @@
             delete c[key];
             return c;
           });
-          if (selKey === key) setSelKey(null);
+          if (selKey === key) {
+            setSelKey(null);
+            history.replaceState(null, "", window.location.pathname);
+          }
           setShowDeleteConfirm(null);
         };
 
@@ -1320,6 +1342,18 @@
                     <div className="sb-label">
                       <span className="pulse-dot" /> Recording
                     </div>
+
+                    <button
+                      className="btn-capture"
+                      onClick={() => {
+                        setNoteInput("");
+                        setNoteCoachInput("");
+                        setShowNoteModal(true);
+                      }}
+                      style={{ marginBottom: 6, flexShrink: 0 }}
+                    >
+                      ◉ Capture Frame
+                    </button>
 
                     {/* Scrollable roster area */}
                     <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
@@ -1559,27 +1593,6 @@
                           </button>
                         </div>
                       ))}
-                    </div>
-                    <button
-                      className="btn-capture"
-                      onClick={() => {
-                        setNoteInput("");
-                        setNoteCoachInput("");
-                        setShowNoteModal(true);
-                      }}
-                      style={{ marginTop: 10 }}
-                    >
-                      ◉ Capture Frame
-                    </button>
-                    <div
-                      style={{
-                        fontSize: 10,
-                        color: "var(--text3)",
-                        marginTop: 4,
-                        textAlign: "center",
-                      }}
-                    >
-                      Need at least 2 frames to save
                     </div>
                     </div>{/* end pinned bottom */}
                   </div>
