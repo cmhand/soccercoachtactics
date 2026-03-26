@@ -341,18 +341,31 @@
         flex-shrink: 0;
       }
 
-      /* Controls bar */
+      /* Controls overlay */
+      .field-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 8px 12px 10px;
+        background: linear-gradient(transparent, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.7));
+        z-index: 2;
+        pointer-events: none;
+        border-radius: 0 0 10px 10px;
+      }
+      .field-controls > * {
+        pointer-events: auto;
+      }
       .controls {
         display: flex;
         align-items: center;
         gap: 7px;
-        margin-top: 12px;
         flex-wrap: wrap;
       }
       .progress-bar {
         display: flex;
         gap: 3px;
-        margin-top: 8px;
+        margin-top: 6px;
       }
       .progress-seg {
         flex: 1;
@@ -1904,133 +1917,138 @@
                           </g>
                         ))}
                           </svg>
-                        </div>
 
-                        {/* Playback controls */}
-                        {mode === "view" && totalF > 0 && (
-                          <>
-                            <div className="controls">
-                              {!playing ? (
+                          {/* Playback controls overlay */}
+                          {mode === "view" && totalF > 0 && (
+                            <div className="field-controls">
+                              <div className="controls">
+                                {!playing ? (
+                                  <button
+                                    className="btn btn-green"
+                                    onClick={() => {
+                                      if (fi >= totalF - 1) {
+                                        setFi(0);
+                                        setProg(0);
+                                      }
+                                      setPlaying(true);
+                                    }}
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: 6,
+                                    }}
+                                  >
+                                    <svg width="11" height="11" viewBox="0 0 12 12">
+                                      <path d="M2 1L11 6L2 11V1Z" fill="white" />
+                                    </svg>
+                                    {fi >= totalF - 1 ? "Replay" : "Play"}
+                                  </button>
+                                ) : (
+                                  <button
+                                    className="btn"
+                                    style={{
+                                      background: "#c9753d",
+                                      color: "#fff",
+                                    }}
+                                    onClick={() => setPlaying(false)}
+                                  >
+                                    Pause
+                                  </button>
+                                )}
+                                <button className="btn btn-outline" onClick={reset}>
+                                  Reset
+                                </button>
                                 <button
-                                  className="btn btn-green"
+                                  className="btn btn-outline btn-sm"
                                   onClick={() => {
-                                    if (fi >= totalF - 1) {
-                                      setFi(0);
-                                      setProg(0);
-                                    }
-                                    setPlaying(true);
+                                    setPlaying(false);
+                                    setFi((i) => Math.max(0, i - 1));
+                                    setProg(0);
                                   }}
+                                  disabled={fi <= 0}
+                                  style={{ opacity: fi <= 0 ? 0.3 : 1 }}
+                                >
+                                  ◀ Prev
+                                </button>
+                                <button
+                                  className="btn btn-outline btn-sm"
+                                  onClick={() => {
+                                    setPlaying(false);
+                                    setFi((i) => Math.min(totalF - 1, i + 1));
+                                    setProg(0);
+                                  }}
+                                  disabled={fi >= totalF - 1}
+                                  style={{ opacity: fi >= totalF - 1 ? 0.3 : 1 }}
+                                >
+                                  Next ▶
+                                </button>
+                                <div
                                   style={{
+                                    marginLeft: "auto",
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: 6,
+                                    gap: 5,
                                   }}
                                 >
-                                  <svg width="11" height="11" viewBox="0 0 12 12">
-                                    <path d="M2 1L11 6L2 11V1Z" fill="white" />
-                                  </svg>
-                                  {fi >= totalF - 1 ? "Replay" : "Play"}
-                                </button>
-                              ) : (
-                                <button
-                                  className="btn"
-                                  style={{
-                                    background: "#c9753d",
-                                    color: "#fff",
-                                  }}
-                                  onClick={() => setPlaying(false)}
-                                >
-                                  Pause
-                                </button>
-                              )}
-                              <button className="btn btn-outline" onClick={reset}>
-                                Reset
-                              </button>
-                              <button
-                                className="btn btn-outline btn-sm"
-                                onClick={() => {
-                                  setPlaying(false);
-                                  setFi((i) => Math.max(0, i - 1));
-                                  setProg(0);
-                                }}
-                                disabled={fi <= 0}
-                                style={{ opacity: fi <= 0 ? 0.3 : 1 }}
-                              >
-                                ◀ Prev
-                              </button>
-                              <button
-                                className="btn btn-outline btn-sm"
-                                onClick={() => {
-                                  setPlaying(false);
-                                  setFi((i) => Math.min(totalF - 1, i + 1));
-                                  setProg(0);
-                                }}
-                                disabled={fi >= totalF - 1}
-                                style={{ opacity: fi >= totalF - 1 ? 0.3 : 1 }}
-                              >
-                                Next ▶
-                              </button>
-                              <div
-                                style={{
-                                  marginLeft: "auto",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 5,
-                                }}
-                              >
-                                <span
-                                  style={{ fontSize: 10, color: "var(--text3)" }}
-                                >
-                                  Speed
-                                </span>
-                                {[0.5, 1, 2].map((s) => (
-                                  <button
-                                    key={s}
-                                    className="btn btn-sm"
-                                    style={{
-                                      border:
-                                        speed === s
-                                          ? "1px solid var(--green3)"
-                                          : "1px solid var(--border)",
-                                      background:
-                                        speed === s
-                                          ? "var(--green2)"
-                                          : "transparent",
-                                      color:
-                                        speed === s
-                                          ? "#b8e6c8"
-                                          : "var(--text3)",
-                                      fontWeight: 600,
-                                    }}
-                                    onClick={() => setSpeed(s)}
+                                  <span
+                                    style={{ fontSize: 10, color: "rgba(255,255,255,0.55)" }}
                                   >
-                                    {s}x
-                                  </button>
+                                    Speed
+                                  </span>
+                                  {[0.5, 1, 2].map((s) => (
+                                    <button
+                                      key={s}
+                                      className="btn btn-sm"
+                                      style={{
+                                        border:
+                                          speed === s
+                                            ? "1px solid var(--green3)"
+                                            : "1px solid rgba(255,255,255,0.2)",
+                                        background:
+                                          speed === s
+                                            ? "var(--green2)"
+                                            : "rgba(0,0,0,0.3)",
+                                        color:
+                                          speed === s
+                                            ? "#b8e6c8"
+                                            : "rgba(255,255,255,0.6)",
+                                        fontWeight: 600,
+                                      }}
+                                      onClick={() => setSpeed(s)}
+                                    >
+                                      {s}x
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="progress-bar">
+                                {curFrames.map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="progress-seg"
+                                    onClick={() => {
+                                      setPlaying(false);
+                                      setFi(i);
+                                      setProg(0);
+                                    }}
+                                    style={{
+                                      background:
+                                        i < fi
+                                          ? "var(--green)"
+                                          : i === fi
+                                            ? `linear-gradient(90deg, var(--green) ${prog * 100}%, rgba(255,255,255,0.12) ${prog * 100}%)`
+                                            : "rgba(255,255,255,0.12)",
+                                    }}
+                                  />
                                 ))}
                               </div>
                             </div>
-                            <div className="progress-bar">
-                              {curFrames.map((_, i) => (
-                                <div
-                                  key={i}
-                                  className="progress-seg"
-                                  onClick={() => {
-                                    setPlaying(false);
-                                    setFi(i);
-                                    setProg(0);
-                                  }}
-                                  style={{
-                                    background:
-                                      i < fi
-                                        ? "var(--green)"
-                                        : i === fi
-                                          ? `linear-gradient(90deg, var(--green) ${prog * 100}%, rgba(255,255,255,0.06) ${prog * 100}%)`
-                                          : "rgba(255,255,255,0.05)",
-                                  }}
-                                />
-                              ))}
-                            </div>
-                            <div className="step-legend">
+                          )}
+                        </div>
+
+                        {/* Step legend */}
+                        {mode === "view" && totalF > 0 && (
+                          <div className="step-legend">
                               {curFrames.map((f, i) => (
                                 <div
                                   key={i}
@@ -2058,7 +2076,6 @@
                                 </div>
                               ))}
                             </div>
-                          </>
                         )}
                       </div>
 
