@@ -2761,4 +2761,183 @@ var DEFAULT_PLAYS = {
     ],
     created: 1774880132628,
   },
+  "wall-pass-up-the-field": {
+    name: "Wall passes up the field",
+    description: "Learn wall passes up the field.",
+    age: "u10",
+    notes:
+      "Great way to learn how to pass and move and to pass into open space.",
+    players: [
+      {
+        id: "A",
+        x: 172.54819197648345,
+        y: 36.432897255066464,
+        color: "#E63946",
+        label: "A",
+      },
+      {
+        id: "B",
+        x: 267.1842318491021,
+        y: 50.55200167789634,
+        color: "#E63946",
+        label: "B",
+      },
+    ],
+    defenders: [],
+    cones: [
+      {
+        id: "C1",
+        x: 177.03744182102548,
+        y: 427.84836011850143,
+      },
+      {
+        id: "C2",
+        x: 256.4721400440935,
+        y: 428.75888105287993,
+      },
+      {
+        id: "C3",
+        x: 219.22553656560328,
+        y: 360.59643971370895,
+      },
+      {
+        id: "C4",
+        x: 223.37108292977067,
+        y: 186.9944681855124,
+      },
+      {
+        id: "C5",
+        x: 222.52689894288568,
+        y: 267.3162834596125,
+      },
+      {
+        id: "C6",
+        x: 223.97105654902109,
+        y: 104.46870985501927,
+      },
+      {
+        id: "C7",
+        x: 223.86553355066044,
+        y: 32.58278058883675,
+      },
+    ],
+    frames: [
+      {
+        positions: {
+          A: {
+            x: 176,
+            y: 418,
+          },
+          B: {
+            x: 259,
+            y: 415,
+          },
+        },
+        ball: {
+          x: 176,
+          y: 406,
+        },
+        arrows: [],
+        note: "Setup - Cones and Ball",
+        coachNote:
+          "Have your players split into two lines, with cones going up the field.",
+      },
+      {
+        positions: {
+          A: {
+            x: 178,
+            y: 364,
+          },
+          B: {
+            x: 262,
+            y: 377,
+          },
+        },
+        ball: {
+          x: 261,
+          y: 359,
+        },
+        arrows: [],
+        note: "First pass to second player.",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 173,
+            y: 289,
+          },
+          B: {
+            x: 267,
+            y: 269,
+          },
+        },
+        ball: {
+          x: 177,
+          y: 274,
+        },
+        arrows: [],
+        note: "Second pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 172,
+            y: 198,
+          },
+          B: {
+            x: 274,
+            y: 203,
+          },
+        },
+        ball: {
+          x: 272,
+          y: 188,
+        },
+        arrows: [],
+        note: "Third pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 169,
+            y: 125,
+          },
+          B: {
+            x: 269,
+            y: 114,
+          },
+        },
+        ball: {
+          x: 172,
+          y: 112,
+        },
+        arrows: [],
+        note: "Fourth pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 173,
+            y: 36,
+          },
+          B: {
+            x: 267,
+            y: 51,
+          },
+        },
+        ball: {
+          x: 268,
+          y: 34,
+        },
+        arrows: [],
+        note: "Fifth pass",
+        coachNote: "",
+      },
+    ],
+    created: 1774893675767,
+  },
 };
