@@ -2940,4 +2940,1164 @@ var DEFAULT_PLAYS = {
     ],
     created: 1774893675767,
   },
+  "2x3x1-vs-3x3-in-10u": {
+    name: "2x3x1 vs 3x3 on 10U",
+    description: "",
+    age: "u10",
+    notes:
+      "What does playing 2x3x1 vs a 3x3 look like on a 10U field where they play 7v7? Take a look.",
+    players: [
+      {
+        id: "A",
+        x: 38.94100133788087,
+        y: 231.92958078808692,
+        color: "#E63946",
+        label: "A",
+      },
+      {
+        id: "B",
+        x: 476.90365373381826,
+        y: 201.58692289541986,
+        color: "#E63946",
+        label: "B",
+      },
+      {
+        id: "C",
+        x: 339.05745350392885,
+        y: 234.83601185014288,
+        color: "#E63946",
+        label: "C",
+      },
+      {
+        id: "D",
+        x: 416.41184118788743,
+        y: 96.50617413417928,
+        color: "#E63946",
+        label: "D",
+      },
+      {
+        id: "E",
+        x: 197.57523224481335,
+        y: 189.25871064153318,
+        color: "#E63946",
+        label: "E",
+      },
+      {
+        id: "F",
+        x: 201.9830786334772,
+        y: 293.278189969326,
+        color: "#E63946",
+        label: "F",
+      },
+      {
+        id: "G",
+        x: 349.8720533644877,
+        y: 328.0739585244999,
+        color: "#E63946",
+        label: "G",
+      },
+    ],
+    defenders: [
+      {
+        id: "D1",
+        x: 225.87348546232263,
+        y: 206.7937760532732,
+        color: "#1D3557",
+        label: "D",
+      },
+      {
+        id: "D2",
+        x: 373.67201190902415,
+        y: 344.1045539155284,
+        color: "#1D3557",
+        label: "D2",
+      },
+      {
+        id: "D3",
+        x: 461.31036951892816,
+        y: 164.28571428571428,
+        color: "#1D3557",
+        label: "D3",
+      },
+      {
+        id: "D4",
+        x: 497.251502760557,
+        y: 232.91849094198147,
+        color: "#1D3557",
+        label: "D4",
+      },
+      {
+        id: "D5",
+        x: 339.0242891330155,
+        y: 103.19337755289307,
+        color: "#1D3557",
+        label: "D5",
+      },
+      {
+        id: "D6",
+        x: 466.6076240366316,
+        y: 302.25978554387433,
+        color: "#1D3557",
+        label: "D6",
+      },
+      {
+        id: "D7",
+        x: 604.1824794135936,
+        y: 230.63314369609103,
+        color: "#1D3557",
+        label: "D7",
+      },
+    ],
+    cones: [],
+    frames: [
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [],
+        note: "Initial Setup, 2x3x1 vs 3x3",
+        coachNote:
+          "The red team is lined up in a 2x3x1. Two backs on the left and right, three midfielders, and one striker.\n\nBlue is lined up in a 3x3, or three backs and three midfielders.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 142.21183741920896,
+            y1: 344.1377185853237,
+            x2: 134.14988034445722,
+            y2: 291.11645649267234,
+          },
+        ],
+        note: "Right Back",
+        coachNote:
+          "Stays slightly to the right in the back and doesn't go past midfield.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 122.20769187284478,
+            y1: 101.44770993367067,
+            x2: 125.14123122727015,
+            y2: 165.9047531657185,
+          },
+        ],
+        note: "Left Back",
+        coachNote:
+          "Stays slightly to the left in the back and doesn't go past midfield.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 122.20769187284478,
+            y1: 101.44770993367067,
+            x2: 167.30520642936554,
+            y2: 109.62732349317044,
+          },
+        ],
+        note: "Left Wing",
+        coachNote:
+          "The left wing, or left mid is a great place for players who have a lot of endurance. They go all the way up the field to help in the attack and all the way back to help with defense.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 128.89784996890842,
+            y1: 348.42500589885435,
+            x2: 176.79323145339086,
+            y2: 344.1075688855098,
+          },
+        ],
+        note: "Right Wing",
+        coachNote:
+          "The right wing, or right mid is a great place for players who have a lot of endurance. They go all the way up the field to help in the attack and all the way back to help with defense.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 177.8122821232735,
+            y1: 291.3244894213879,
+            x2: 189.5102602272513,
+            y2: 251.57211021681564,
+          },
+        ],
+        note: "Center Mid",
+        coachNote:
+          "The center mid is one of the most active players on the field. They are the primary passer on the field, helping with both offense and defense. Pick someone with good soccer smarts.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 227.962840829863,
+            y1: 292.1867708360643,
+            x2: 249.81213137613295,
+            y2: 245.88889180190338,
+          },
+        ],
+        note: "Striker",
+        coachNote:
+          "Primary goal scorer. Should keep pressure up on defense and be the first defender when losing the ball. Stays up top pressuring the opposing backs.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 427.9198778948162,
+            y1: 268.14238523451223,
+            x2: 475.3358834724604,
+            y2: 238.59266444694964,
+          },
+        ],
+        note: "Sweeper or Center Back",
+        coachNote:
+          "The center back, or sweeper, is your last line of defense and the captain of the defense. They help coordinate the defense and fill gaps in the middle of the field.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 435.0110233846502,
+            y1: 236.96156568701988,
+            x2: 450.46562023026627,
+            y2: 194.5921925386047,
+          },
+        ],
+        note: "Right Back",
+        coachNote:
+          "The right back covers the right side of your backfield. They should be level with or in front of the sweeper, but never behind them.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 435.0110233846502,
+            y1: 236.96156568701988,
+            x2: 453.501667640242,
+            y2: 282.5720315654248,
+          },
+        ],
+        note: "Left Back",
+        coachNote:
+          "The left back covers the left side of your backfield. They should be level with or in front of the sweeper, but never behind them.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 429.894665435565,
+            y1: 214.4819495058071,
+            x2: 409.4262186964141,
+            y2: 160.33911858008022,
+          },
+        ],
+        note: "Right wing, or right striker",
+        coachNote:
+          "In a 3x3 on a 10U field, the right wing plays more active up top.  Still covers the right side of the field, but is ready to assist on the attack.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 429.2012285891952,
+            y1: 266.49621162467554,
+            x2: 403.9239480676101,
+            y2: 316.73767139448915,
+          },
+        ],
+        note: "Left wing, or striker",
+        coachNote:
+          "In a 3x3 on a 10U field, the left wing plays more active up top.  Still covers the left side of the field, but is ready to assist on the attack.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 263,
+            y: 224,
+          },
+          C: {
+            x: 196,
+            y: 226,
+          },
+          D: {
+            x: 194,
+            y: 115,
+          },
+          E: {
+            x: 126,
+            y: 192,
+          },
+          F: {
+            x: 127,
+            y: 267,
+          },
+          G: {
+            x: 201,
+            y: 341,
+          },
+          D1: {
+            x: 384,
+            y: 232,
+          },
+          D2: {
+            x: 395,
+            y: 341,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 396,
+            y: 135,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 320,
+          y: 228,
+        },
+        arrows: [
+          {
+            id: "AR1",
+            x1: 416.4208860163184,
+            y1: 292.2048606559526,
+            x2: 397.4237313685956,
+            y2: 256.28450829772174,
+          },
+        ],
+        note: "Center striker",
+        coachNote:
+          "Leader of the attack. Stays up field pressuring their backs and ready to steal the ball and score.",
+      },
+      {
+        positions: {
+          A: {
+            x: 39,
+            y: 232,
+          },
+          B: {
+            x: 477,
+            y: 202,
+          },
+          C: {
+            x: 339,
+            y: 235,
+          },
+          D: {
+            x: 416,
+            y: 97,
+          },
+          E: {
+            x: 198,
+            y: 189,
+          },
+          F: {
+            x: 202,
+            y: 293,
+          },
+          G: {
+            x: 350,
+            y: 328,
+          },
+          D1: {
+            x: 226,
+            y: 207,
+          },
+          D2: {
+            x: 374,
+            y: 344,
+          },
+          D3: {
+            x: 461,
+            y: 164,
+          },
+          D4: {
+            x: 497,
+            y: 233,
+          },
+          D5: {
+            x: 339,
+            y: 103,
+          },
+          D6: {
+            x: 467,
+            y: 302,
+          },
+          D7: {
+            x: 604,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 443,
+          y: 165,
+        },
+        arrows: [],
+        note: "Real Game Field - Positions Opening Up",
+        coachNote: "How the positions may look in a game time scenario.",
+      },
+    ],
+    created: 1774899754677,
+  },
 };
