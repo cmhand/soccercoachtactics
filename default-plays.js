@@ -2362,4 +2362,403 @@ var DEFAULT_PLAYS = {
     ],
     created: 1774552746058,
   },
+  "teaching-wall-pass": {
+    name: "Teaching Wall Pass",
+    description: "",
+    age: "u10",
+    notes: "Teach the wall pass with a simple passing drill using a cone.",
+    players: [
+      {
+        id: "A",
+        x: 123.33829542670863,
+        y: 425.5961775424062,
+        color: "#E63946",
+        label: "A",
+      },
+      {
+        id: "B",
+        x: 150.99738076843354,
+        y: 318.70041685237135,
+        color: "#E63946",
+        label: "B",
+      },
+    ],
+    defenders: [],
+    cones: [
+      {
+        id: "C1",
+        x: 146.7221918634231,
+        y: 403.88839367642817,
+      },
+      {
+        id: "C2",
+        x: 152.73398782716842,
+        y: 302.2055160842094,
+      },
+    ],
+    frames: [
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 123,
+            y: 432,
+          },
+        },
+        ball: {
+          x: 124,
+          y: 410,
+        },
+        arrows: [],
+        note: "Setup, Cones and Players",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 123,
+            y: 432,
+          },
+        },
+        ball: {
+          x: 152,
+          y: 338,
+        },
+        arrows: [],
+        note: "Pass One",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 170,
+            y: 426,
+          },
+        },
+        ball: {
+          x: 170,
+          y: 407,
+        },
+        arrows: [],
+        note: "Pass 2",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 151,
+            y: 429,
+          },
+        },
+        ball: {
+          x: 154,
+          y: 338,
+        },
+        arrows: [],
+        note: "Pass 3",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 119,
+            y: 422,
+          },
+        },
+        ball: {
+          x: 122,
+          y: 406,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 144,
+            y: 428,
+          },
+        },
+        ball: {
+          x: 152,
+          y: 337,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 169,
+            y: 422,
+          },
+        },
+        ball: {
+          x: 168,
+          y: 406,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 146,
+            y: 427,
+          },
+        },
+        ball: {
+          x: 152,
+          y: 337,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 153,
+            y: 320,
+          },
+          B: {
+            x: 123,
+            y: 426,
+          },
+        },
+        ball: {
+          x: 127,
+          y: 407,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 182,
+            y: 360,
+          },
+          B: {
+            x: 102,
+            y: 355,
+          },
+        },
+        ball: {
+          x: 127,
+          y: 407,
+        },
+        arrows: [],
+        note: "Switch",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 124,
+            y: 426,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 127,
+          y: 407,
+        },
+        arrows: [],
+        note: "Switch",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 147,
+            y: 428,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 150,
+          y: 336,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 170,
+            y: 424,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 167,
+          y: 404,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 146,
+            y: 430,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 149,
+          y: 335,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 123,
+            y: 426,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 124,
+          y: 405,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 149,
+            y: 426,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 151,
+          y: 336,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 175,
+            y: 423,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 169,
+          y: 402,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 146,
+            y: 428,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 149,
+          y: 336,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 123,
+            y: 426,
+          },
+          B: {
+            x: 151,
+            y: 319,
+          },
+        },
+        ball: {
+          x: 127,
+          y: 403,
+        },
+        arrows: [],
+        note: "Pass",
+        coachNote: "",
+      },
+    ],
+    created: 1774880132628,
+  },
 };
