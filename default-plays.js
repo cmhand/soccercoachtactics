@@ -4100,4 +4100,476 @@ var DEFAULT_PLAYS = {
     ],
     created: 1774899754677,
   },
+  "3-players-cone-pass-and-move": {
+    name: "3 Players - Cone pass and move",
+    description: "",
+    age: "u14",
+    notes: "",
+    players: [
+      {
+        id: "A",
+        x: 194.5334652159578,
+        y: 232.28160211015225,
+        color: "#E63946",
+        label: "A",
+      },
+      {
+        id: "B",
+        x: 273.8608638311903,
+        y: 302.55956306086756,
+        color: "#E63946",
+        label: "B",
+      },
+      {
+        id: "C",
+        x: 187.23046488625124,
+        y: 303.5816680524098,
+        color: "#E63946",
+        label: "C",
+      },
+    ],
+    defenders: [],
+    cones: [
+      {
+        id: "C1",
+        x: 270.1681503461919,
+        y: 223.24421571719373,
+      },
+      {
+        id: "C2",
+        x: 184.632377184306,
+        y: 318.8407064422719,
+      },
+      {
+        id: "C3",
+        x: 275.443455324761,
+        y: 317.0075116832478,
+      },
+      {
+        id: "C4",
+        x: 184.59281239696668,
+        y: 223.39258579661114,
+      },
+    ],
+    frames: [
+      {
+        positions: {
+          A: {
+            x: 188,
+            y: 306,
+          },
+          B: {
+            x: 272,
+            y: 236,
+          },
+          C: {
+            x: 194,
+            y: 233,
+          },
+        },
+        ball: {
+          x: 202,
+          y: 295,
+        },
+        arrows: [],
+        note: "Setup with 3 players",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 272,
+            y: 304,
+          },
+          B: {
+            x: 272,
+            y: 236,
+          },
+          C: {
+            x: 194,
+            y: 233,
+          },
+        },
+        ball: {
+          x: 260,
+          y: 246,
+        },
+        arrows: [],
+        note: "1: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 272,
+            y: 304,
+          },
+          B: {
+            x: 190,
+            y: 308,
+          },
+          C: {
+            x: 194,
+            y: 233,
+          },
+        },
+        ball: {
+          x: 210,
+          y: 238,
+        },
+        arrows: [],
+        note: "2: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 272,
+            y: 304,
+          },
+          B: {
+            x: 190,
+            y: 308,
+          },
+          C: {
+            x: 269,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 261,
+          y: 296,
+        },
+        arrows: [],
+        note: "3: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 195,
+            y: 232,
+          },
+          B: {
+            x: 190,
+            y: 308,
+          },
+          C: {
+            x: 269,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 196,
+          y: 296,
+        },
+        arrows: [],
+        note: "4: Pass and Move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 195,
+            y: 232,
+          },
+          B: {
+            x: 274,
+            y: 303,
+          },
+          C: {
+            x: 269,
+            y: 231,
+          },
+        },
+        ball: {
+          x: 259,
+          y: 239,
+        },
+        arrows: [],
+        note: "5: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 195,
+            y: 232,
+          },
+          B: {
+            x: 274,
+            y: 303,
+          },
+          C: {
+            x: 187,
+            y: 304,
+          },
+        },
+        ball: {
+          x: 263,
+          y: 299,
+        },
+        arrows: [],
+        note: "6: Pass and move",
+        coachNote: "",
+      },
+    ],
+    created: 1779223170060,
+  },
+  "4-players-cone-pass-and-move": {
+    name: "4 Players - Cone pass and move",
+    description: "",
+    age: "u14",
+    notes: "",
+    players: [
+      {
+        id: "A",
+        x: 270.234091658424,
+        y: 280.24470311648844,
+        color: "#E63946",
+        label: "A",
+      },
+      {
+        id: "B",
+        x: 174.19386745796243,
+        y: 223.82780469623557,
+        color: "#E63946",
+        label: "B",
+      },
+      {
+        id: "C",
+        x: 149.19881305637983,
+        y: 281.7415923621664,
+        color: "#E63946",
+        label: "C",
+      },
+      {
+        id: "D",
+        x: 246.05670952851963,
+        y: 225.1103816049772,
+        color: "#E63946",
+        label: "D",
+      },
+    ],
+    defenders: [],
+    cones: [
+      {
+        id: "C1",
+        x: 171.13419057039235,
+        y: 215.33114481493163,
+      },
+      {
+        id: "C2",
+        x: 253.15199472469502,
+        y: 218.407351128186,
+      },
+      {
+        id: "C3",
+        x: 137.74151005605012,
+        y: 284.51446429083404,
+      },
+      {
+        id: "C4",
+        x: 204.19057039235082,
+        y: 329.37168496803235,
+      },
+      {
+        id: "C5",
+        x: 272.45631388064623,
+        y: 291.2471687835087,
+      },
+    ],
+    frames: [
+      {
+        positions: {
+          A: {
+            x: 202,
+            y: 315,
+          },
+          B: {
+            x: 262,
+            y: 280,
+          },
+          C: {
+            x: 244,
+            y: 234,
+          },
+          D: {
+            x: 180,
+            y: 228,
+          },
+        },
+        ball: {
+          x: 203,
+          y: 300,
+        },
+        arrows: [],
+        note: "Setup - 4 players, 5 cones",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 145,
+            y: 278,
+          },
+          B: {
+            x: 262,
+            y: 280,
+          },
+          C: {
+            x: 244,
+            y: 234,
+          },
+          D: {
+            x: 180,
+            y: 228,
+          },
+        },
+        ball: {
+          x: 233,
+          y: 243,
+        },
+        arrows: [],
+        note: "1: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 145,
+            y: 278,
+          },
+          B: {
+            x: 262,
+            y: 280,
+          },
+          C: {
+            x: 204,
+            y: 315,
+          },
+          D: {
+            x: 180,
+            y: 228,
+          },
+        },
+        ball: {
+          x: 183,
+          y: 241,
+        },
+        arrows: [],
+        note: "2: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 145,
+            y: 278,
+          },
+          B: {
+            x: 262,
+            y: 280,
+          },
+          C: {
+            x: 204,
+            y: 315,
+          },
+          D: {
+            x: 246,
+            y: 225,
+          },
+        },
+        ball: {
+          x: 251,
+          y: 275,
+        },
+        arrows: [],
+        note: "3: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 145,
+            y: 278,
+          },
+          B: {
+            x: 174,
+            y: 224,
+          },
+          C: {
+            x: 204,
+            y: 315,
+          },
+          D: {
+            x: 246,
+            y: 225,
+          },
+        },
+        ball: {
+          x: 157,
+          y: 272,
+        },
+        arrows: [],
+        note: "4: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 270,
+            y: 280,
+          },
+          B: {
+            x: 174,
+            y: 224,
+          },
+          C: {
+            x: 204,
+            y: 315,
+          },
+          D: {
+            x: 246,
+            y: 225,
+          },
+        },
+        ball: {
+          x: 200,
+          y: 303,
+        },
+        arrows: [],
+        note: "5: Pass and move",
+        coachNote: "",
+      },
+      {
+        positions: {
+          A: {
+            x: 270,
+            y: 280,
+          },
+          B: {
+            x: 174,
+            y: 224,
+          },
+          C: {
+            x: 149,
+            y: 282,
+          },
+          D: {
+            x: 246,
+            y: 225,
+          },
+        },
+        ball: {
+          x: 180,
+          y: 237,
+        },
+        arrows: [],
+        note: "6: Pass and move",
+        coachNote: "",
+      },
+    ],
+    created: 1779223331229,
+  },
 };
